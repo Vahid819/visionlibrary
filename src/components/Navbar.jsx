@@ -9,7 +9,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import SignUpForm from './SignUpForm'
 import Link from 'next/link'
+
 
 function Navbar() {
     return (
@@ -18,13 +20,14 @@ function Navbar() {
                 Logo
             </div>
             <div className='flex justify-around w-[15%]'>
-                <div className='signin'>
+                <div className='signin' id='signin'>
                     <Dialog>
-                        <DialogTrigger className='border-gray-500 border-2 rounded-lg p-1 w-20'>Sign In</DialogTrigger>
+                        <DialogTrigger className='border-gray-500 border-2 rounded-lg p-1 w-20 hover:scale-105 transition duration-300 ease-in-out '>Sign In</DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle  className='text-center'>Sign In</DialogTitle>
+                                <DialogTitle className='text-center'>Sign In</DialogTitle>
                             </DialogHeader>
+
                             <DialogFooter>
                                 <Button type="submit">Login</Button>
                             </DialogFooter>
@@ -33,13 +36,16 @@ function Navbar() {
                 </div>
                 <div className='signup'>
                     <Dialog>
-                        <DialogTrigger className='border-gray-500 border-2 rounded-lg p-1 w-20'>Sign Up</DialogTrigger>
+                        <DialogTrigger className='border-gray-500 border-2 rounded-lg p-1 w-20 hover:scale-105 transition duration-300 ease-in-out'>Sign Up</DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle className='text-center'>Sign Up</DialogTitle>
                             </DialogHeader>
+                            <SignUpForm />
                             <DialogFooter>
-                                <Button type="submit">Create Account</Button>
+                                <Link href={"signin"}>
+                                    <button>Login</button>
+                                </Link>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
