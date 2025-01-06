@@ -42,11 +42,6 @@ function Navbar() {
                                 <DialogTitle className='text-center'>Sign Up</DialogTitle>
                             </DialogHeader>
                             <SignUpForm />
-                            <DialogFooter>
-                                <Link href={"signin"}>
-                                    <button>Login</button>
-                                </Link>
-                            </DialogFooter>
                         </DialogContent>
                     </Dialog>
                 </div>
