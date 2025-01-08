@@ -26,7 +26,7 @@ function Navbar() {
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle className='text-center'>Sign In</DialogTitle>
-                                <DialogDescription>If your account are not created then please create your account</DialogDescription>
+                                <DialogDescription>If your account was not created so please create your account</DialogDescription>
                             </DialogHeader>
 
                             <DialogFooter>
@@ -43,7 +43,7 @@ function Navbar() {
                                 <DialogTitle className='text-center'>Sign Up</DialogTitle>
                             </DialogHeader>
                             <SignUpForm />
-                                <DialogDescription>If your account are create allready then please Login</DialogDescription>
+                                <DialogDescription>If your account has been create allready then please Login</DialogDescription>
                         </DialogContent>
                     </Dialog>
                 </div>

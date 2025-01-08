@@ -1,6 +1,7 @@
-import dbConnect from "@/lib/dbConection"; 
+import dbConnect from "@/lib/dbConection";
 import User from "@/model/User";
 import bcrypt from "bcryptjs";
+import signUpSchema from "@/zodSchemas/signUP";
 
 export async function POST(req) {
     // Ensure database connection
@@ -9,27 +10,43 @@ export async function POST(req) {
     try {
         const { fristname, lastname, email, username, password } = await req.json();
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create and save the new user
-        const newUser = new User({
-            fristname, // Fixed typo: "fristname" to "firstname"
-            lastname,
-            email,
+        const existusername = await User.findOne({
             username,
-            password: hashedPassword,
-        });
-        await newUser.save();
+        })
 
-        // Respond with success
-        return new Response(
-            JSON.stringify({
-                success: true,
-                message: "User registered successfully",
-            }),
-            { status: 201 }
-        );
+        // Check username is exist or not 
+        if (existusername) {
+            return Response.json({
+                success: false,
+                message: "Username is already taken"
+            }, {
+                status: 400
+            })
+        } else {
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // Create and save the new user
+            const newUser = new User({
+                fristname,
+                lastname,
+                email,
+                username,
+                password: hashedPassword,
+            });
+            await newUser.save();
+
+            // Respond with success
+            return new Response(
+                JSON.stringify({
+                    success: true,
+                    message: "User registered successfully",
+                }),
+                { status: 201 }
+            );
+        }
+
+
     } catch (error) {
         console.error("Something went wrong:", error);
 
