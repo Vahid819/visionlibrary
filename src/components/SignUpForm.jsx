@@ -14,9 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import dbConnect from '@/lib/dbConection';
 import Link from 'next/link';
 
 function SignUpForm() {
+
   const form = useForm({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
