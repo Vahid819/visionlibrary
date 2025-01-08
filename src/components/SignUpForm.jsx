@@ -2,6 +2,7 @@
 import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import signUpSchema from '@/zodSchemas/signUP'
+import axios from 'axios';
 import { Button } from "@/components/ui/button"
 import { useForm } from 'react-hook-form'
 import {
@@ -14,8 +15,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import dbConnect from '@/lib/dbConection';
-import Link from 'next/link';
 
 function SignUpForm() {
 
@@ -31,8 +30,14 @@ function SignUpForm() {
     }
   })
 
-  function onSubmit(value) {
-    console.log(value)
+  async function onSubmit(value) {
+    try {
+      const response = await axios.post("/api/signUp", value)
+      form.reset();
+    } catch (error) {
+      console.log("Error",error)
+      
+    }
   }
 
   return (
