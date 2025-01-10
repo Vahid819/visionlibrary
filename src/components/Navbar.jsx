@@ -1,15 +1,5 @@
 import React from 'react'
 import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import SignUpForm from './SignUpForm'
 import Link from 'next/link'
 
 
@@ -21,31 +11,10 @@ function Navbar() {
             </div>
             <div className='flex justify-around w-[15%]'>
                 <div className='signin' id='signin'>
-                    <Dialog>
-                        <DialogTrigger className='border-gray-500 border-2 rounded-lg p-1 w-20 hover:scale-105 transition duration-300 ease-in-out '>Sign In</DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle className='text-center'>Sign In</DialogTitle>
-                                <DialogDescription>If your account was not created so please create your account</DialogDescription>
-                            </DialogHeader>
-
-                            <DialogFooter>
-                                <Button type="submit">Login</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                <Link href={"sign-In"}><Button>Sign In</Button></Link>
                 </div>
                 <div className='signup'>
-                    <Dialog>
-                        <DialogTrigger className='border-gray-500 border-2 rounded-lg p-1 w-20 hover:scale-105 transition duration-300 ease-in-out'>Sign Up</DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle className='text-center'>Sign Up</DialogTitle>
-                            </DialogHeader>
-                            <SignUpForm />
-                                <DialogDescription>If your account has been create allready then please Login</DialogDescription>
-                        </DialogContent>
-                    </Dialog>
+                    <Link href={"sign-Up"}><Button>Sign UP</Button></Link>
                 </div>
             </div>
         </div>

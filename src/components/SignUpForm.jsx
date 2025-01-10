@@ -41,7 +41,6 @@ function SignUpForm() {
   }
 
   return (
-    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -112,7 +111,6 @@ function SignUpForm() {
           <Button type='submit'>Create Account</Button>
         </form>
       </Form>
-    </div>
   )
 }
 
