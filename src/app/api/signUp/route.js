@@ -1,8 +1,8 @@
-'use client'
+
 import dbConnect from "@/lib/dbConection";
 import User from "@/model/User";
 import bcrypt from "bcryptjs";
-import signUpSchema from "@/zodSchemas/signUP";
+
 
 export async function POST(req) {
     // Ensure database connection
