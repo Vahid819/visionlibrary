@@ -1,3 +1,4 @@
+'use client'
 import dbConnect from "@/lib/dbConection";
 import User from "@/model/User";
 import bcrypt from "bcryptjs";
@@ -35,7 +36,7 @@ export async function POST(req) {
                 password: hashedPassword,
             });
             await newUser.save();
-
+            alert.status()
             // Respond with success
             return new Response(
                 JSON.stringify({

@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import signUpSchema from '@/zodSchemas/signUP'
@@ -108,7 +108,7 @@ function SignUpForm() {
               </FormItem>
             )}
           />
-          <Button type='submit'>Create Account</Button>
+          <Button type='submit' >Create Account</Button>
         </form>
       </Form>
   )
