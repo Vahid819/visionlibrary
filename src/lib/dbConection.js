@@ -6,10 +6,6 @@ const dbConnect = async () => {
     console.log("Database is already connected.");
     return mongoose.connection; // Return the existing connection
   }
-  if(mongoose.connection.readyState === 3){
-    console.log("database is dissconnected")
-    return
-  }
 
   try {
     console.log("Connecting to the database...");

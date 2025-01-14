@@ -36,7 +36,6 @@ export async function POST(req) {
                 password: hashedPassword,
             });
             await newUser.save();
-            alert.status()
             // Respond with success
             return new Response(
                 JSON.stringify({
