@@ -1,9 +1,9 @@
 import zod from "zod";
 
-export const ZodUserSchema = zod.object({
-    fname: zod.string().min(1).max(100).trim(),
-    lname: zod.string().min(1).max(100).trim(),
-    email: zod.string().email().max(255).trim().toLowerCase().regex(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/),
-    username: zod.string().min(3).max(30).trim().regex(/^[a-zA-Z0-9_]{3,30}$/).trim(),
-    password: zod.string().min(6).regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/),
+export const UserZodSchema = zod.object({
+    fname: zod.string().min(1, "First name is required"),
+    lname: zod.string().min(1, "Last name is required"),
+    email: zod.string().email("Invalid email address").regex(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please fill a valid email address").trim(),
+    otp : zod.number().min(100000, "OTP must be a 6-digit number").max(999999, "OTP must be a 6-digit number"),
+    password: zod.string().min(6, "Password must be at least 6 characters long"),
 })
