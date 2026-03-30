@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema(
             required: [true,"please enter your name"],
             trim: true
         },
+        lastname:{
+            type: String,
+            trim: true
+        },
         email:{
             type: String,
             required: [true, "please enter you email id"],
@@ -23,14 +27,25 @@ const userSchema = new mongoose.Schema(
             required: [true, "please enter your password"],
             match: [passwordRegex, "Password must contain uppercase, lowercase, number and be at least 8 characters"]
         },
+        otp:{
+            type: Number,
+            required: [true, "please enter you OTP"],
+        },
         role:{
             type: String,
-            enum: ["admin", 'staff', "user"],
+            enum: ["owner", 'admin', "staff", "user"],
             default: ["user"],
         },
         isActive: {
             type: Boolean,
             default: true
         }
+    },
+    {
+        timestamps:true,   
     }
 )
+
+const UserModel = mongoose.model("User", userSchema) || mongoose.models.User;
+
+export default UserModel;
