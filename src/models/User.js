@@ -31,6 +31,17 @@ const userSchema = new mongoose.Schema(
             type: Number,
             required: [true, "please enter you OTP"],
         },
+        otpCreatedAt:{
+            type: Date,
+            default: Date.now,
+        },
+        otpExpirydate:{
+            type: Date,
+        },
+        userverified:{
+            type: Boolean,
+            default: false,
+        },
         role:{
             type: String,
             enum: ["owner", 'admin', "staff", "user"],
