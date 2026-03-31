@@ -2,6 +2,7 @@ import connectDB from "@/lib/db";
 import UserModel from "@/models/User";
 import { hash } from "bcryptjs";
 import crypto from "crypto";
+import { sendEmail } from "@/helper/setoptemail";
 
 export async function POST(req){
     await connectDB();
@@ -16,6 +17,7 @@ export async function POST(req){
 
         const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit OTP
         const otpExpiryDate = new Date(Date.now() + 1 * 60 * 1000); // OTP expires in 1 minute
+        await sendEmail(body.email, otp)
         const hashedPassword = await hash(body.password, 10);
 
         const newUser = new UserModel({
