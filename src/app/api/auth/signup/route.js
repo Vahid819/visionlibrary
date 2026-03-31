@@ -2,7 +2,7 @@ import connectDB from "@/lib/db";
 import UserModel from "@/models/User";
 import { hash } from "bcryptjs";
 import crypto from "crypto";
-import { sendEmail } from "@/helper/setoptemail";
+import { sendOTPEmail } from "@/helper/setoptemail";
 
 export async function POST(req){
     await connectDB();
@@ -16,19 +16,21 @@ export async function POST(req){
         }
 
         const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit OTP
-        const otpExpiryDate = new Date(Date.now() + 1 * 60 * 1000); // OTP expires in 1 minute
-        await sendEmail(body.email, otp)
+        const otpExpiryDate = new Date(Date.now() + 10 * 60 * 1000);
+        await sendOTPEmail(body.email, otp)
         const hashedPassword = await hash(body.password, 10);
 
         const newUser = new UserModel({
-            name: body.name,
-            lastname: body.lastname,
+            firstname: body.firstName,
+            lastname: body.lastName,
             email: body.email,
             password: hashedPassword,
             otp: otp,
             otpCreatedAt: new Date(),
             otpExpiryDate: otpExpiryDate,
         })
+
+        console.log("New user created:", newUser);
 
         await newUser.save();
         return new Response(JSON.stringify({ message: "User registered successfully" }), { status: 201 });

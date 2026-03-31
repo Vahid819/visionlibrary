@@ -5,9 +5,9 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
 const userSchema = new mongoose.Schema(
     {
-        name:{
+        firstname:{
             type:String,
-            required: [true,"please enter your name"],
+            required: [true,"please enter your firstname"],
             trim: true
         },
         lastname:{
@@ -29,13 +29,12 @@ const userSchema = new mongoose.Schema(
         },
         otp:{
             type: Number,
-            required: [true, "please enter you OTP"],
         },
         otpCreatedAt:{
             type: Date,
             default: Date.now,
         },
-        otpExpirydate:{
+        otpExpiryDate:{
             type: Date,
         },
         userverified:{
@@ -45,7 +44,7 @@ const userSchema = new mongoose.Schema(
         role:{
             type: String,
             enum: ["owner", 'admin', "staff", "user"],
-            default: ["user"],
+            default: "user",
         },
         isActive: {
             type: Boolean,
@@ -57,6 +56,6 @@ const userSchema = new mongoose.Schema(
     }
 )
 
-const UserModel = mongoose.model("User", userSchema) || mongoose.models.User;
+const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default UserModel;
