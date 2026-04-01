@@ -19,7 +19,7 @@ globalWithMongoose.mongoose = cached;
 export async function connectDB() {
     //TODO after complete all code remove console.log
   if (cached.conn) {
-    console.log(cached.conn);
+    // console.log(cached.conn);
     return cached.conn;
   } 
 

@@ -30,7 +30,7 @@ export async function POST(req){
             otpExpiryDate: otpExpiryDate,
         })
 
-        console.log("New user created:", newUser);
+        // console.log("New user created:", newUser);
 
         await newUser.save();
         return new Response(JSON.stringify({ message: "User registered successfully" }), { status: 201 });
