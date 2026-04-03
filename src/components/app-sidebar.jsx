@@ -25,7 +25,7 @@ export function AppSidebar() {
     <Sidebar
       variant="floating"
       collapsible="icon"
-      className="bg-[#0a0a0a] border-r border-white/10"
+      className=" w-64 data-[collapsible=icon]:w-16"
     >
       {/* 🔹 HEADER */}
       <SidebarHeader>
@@ -42,8 +42,8 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="w-[200px]">
-                <DropdownMenuItem>Acme Inc</DropdownMenuItem>
+              <DropdownMenuContent className="w-50">
+                <DropdownMenuItem>Acme Inc</DropdownMenuItem> 
                 <DropdownMenuItem>Vision Library</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

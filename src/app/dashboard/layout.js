@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }) {
         <AppSidebar />
 
         <SidebarInset>
-          <main className="p-4">
+          <main className="p-2">{/* 🔹 MAIN CONTENT */}
             <SidebarTrigger />
             {children}
           </main>
@@ -22,4 +22,5 @@ export default function DashboardLayout({ children }) {
       </SidebarProvider>
     </TooltipProvider>
   );
+  
 }

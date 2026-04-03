@@ -51,8 +51,8 @@ export default function LoginPage() {
       <ThemeToggle />
 
       {/* 🌈 Soft Glow Background */}
-      <div className="absolute w-[400px] h-[400px] bg-indigo-500/20 blur-3xl rounded-full top-[-100px] left-[-100px]" />
-      <div className="absolute w-[300px] h-[300px] bg-cyan-400/20 blur-3xl rounded-full bottom-[-100px] right-[-100px]" />
+      <div className="absolute w-100 h-100 bg-indigo-500/20 blur-3xl rounded-full -top-25 -left-25" />
+      <div className="absolute w-75 h-75 bg-cyan-400/20 blur-3xl rounded-full -bottom-25 -right-25" />
 
       {/* 🔥 Card */}
       <motion.div

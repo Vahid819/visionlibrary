@@ -93,13 +93,13 @@ export default function VerifyOTPPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-cyan-100">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-100 via-white to-cyan-100">
       
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="w-[380px]"
+        className="w-95"
       >
         <Card className="backdrop-blur-xl bg-white/60 border border-white/30 shadow-2xl rounded-2xl">
           <CardContent className="p-6 space-y-6 text-center">

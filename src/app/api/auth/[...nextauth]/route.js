@@ -23,31 +23,46 @@ export const authOptions = {
           email: credentials.email,
         });
 
-        if (!user) {
-          throw new Error("User not found");
-        }
-
-        if (!user.userverified) {
+        if (!user) throw new Error("User not found");
+        if (!user.userverified)
           throw new Error("Please verify your email first");
-        }
 
-        const isMatch = await compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!isMatch) {
-          throw new Error("Invalid credentials");
-        }
+        const isMatch = await compare(credentials.password, user.password);
+        if (!isMatch) throw new Error("Invalid credentials");
 
         return {
           id: user._id.toString(),
           email: user.email,
-          name: user.firstName,
+          name: user.firstname,
         };
       },
     }),
   ],
+
+  // ✅ ✅ MOVE HERE (TOP LEVEL)
+  callbacks: {
+  async jwt({ token, user }) {
+    if (user) {
+      // console.log("JWT USER:", user);
+
+      token.id = user.id;
+      token.email = user.email;
+      token.name = user.name; // ✅ FIXED
+    }
+    return token;
+  },
+
+  async session({ session, token }) {
+    // console.log("SESSION TOKEN:", token);
+
+    if (session.user) {
+      session.user.id = token.id;
+      session.user.email = token.email;
+      session.user.name = token.name; // ✅ FIXED
+    }
+    return session;
+  },
+},
 
   session: {
     strategy: "jwt",
