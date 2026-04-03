@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }) {
         <AppSidebar />
 
         <SidebarInset>
-          <main className="p-2">{/* 🔹 MAIN CONTENT */}
+          <main className="p-2 bg-blend-darken">{/* 🔹 MAIN CONTENT */}
             <SidebarTrigger />
             {children}
           </main>
