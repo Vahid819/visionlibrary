@@ -1,20 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 
-export default function ThemeToggle() {
-  const [dark, setDark] = useState(true);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-  }, [dark]);
+export function ThemeToggle() {
+  const { setTheme } = useTheme();
 
   return (
-    <button
-      onClick={() => setDark(!dark)}
-      className="fixed top-4 right-4 bg-white/10 px-3 py-2 rounded-lg"
-    >
-      {dark ? "🌙 Dark" : "☀️ Light"}
-    </button>
+    <div className="flex gap-2">
+      <Button onClick={() => setTheme("light")}>Light</Button>
+      <Button onClick={() => setTheme("dark")}>Dark</Button>
+    </div>
   );
 }

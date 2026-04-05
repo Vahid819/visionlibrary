@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -17,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "./ui/separator";
+import { ThemeToggle } from "./ThemeToggle";
 
 import { ChevronDown, House, Building2, BanknoteArrowDown, Armchair } from "lucide-react";
 
@@ -50,6 +52,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+      
       <Separator className="px-1 w-auto" />
       {/* 🔹 CONTENT */}
       <SidebarContent>
@@ -85,6 +88,12 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
+
+      <Separator className="px-1 w-auto" />
+        {/* 🔹 FOOTER */}
+      <SidebarFooter>
+        <ThemeToggle />
+      </SidebarFooter>
     </Sidebar>
   );
 }

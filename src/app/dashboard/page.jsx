@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import LogoutButton from "@/components/LogoutButton";
 import Deskarengment from "@/components/Deskarengment";
-import ThemeToggle from "@/components/ThemeToggle";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -17,7 +16,6 @@ export default async function Dashboard() {
       <h1>Welcome, {session.user.name}!</h1>
       <LogoutButton />
       <Deskarengment />
-      <ThemeToggle />
     </div>
   );
 }

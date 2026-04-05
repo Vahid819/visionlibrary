@@ -10,8 +10,6 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import ThemeToggle from "@/components/ThemeToggle";
-
 export default function LoginPage() {
   const router = useRouter();
 
@@ -46,9 +44,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-[#020617] flex items-center justify-center px-4 relative overflow-hidden">
-
-      {/* 🎨 Theme Toggle */}
-      <ThemeToggle />
 
       {/* 🌈 Soft Glow Background */}
       <div className="absolute w-100 h-100 bg-indigo-500/20 blur-3xl rounded-full -top-25 -left-25" />
