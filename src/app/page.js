@@ -6,6 +6,7 @@ function page() {
     <div>
       Landing page
       <Link href="/auth/login">login</Link>
+      hello world
     </div>
   )
 }
