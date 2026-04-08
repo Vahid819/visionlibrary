@@ -17,7 +17,7 @@ export function StatCard({ title, value, icon: Icon }) {
       <Card className="relative overflow-hidden bg-background/60 backdrop-blur border hover:shadow-xl transition">
         
         {/* Glow */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent opacity-0 hover:opacity-100 transition" />
+        <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary/10 to-transparent opacity-0 hover:opacity-100 transition" />
 
         <CardContent className="p-4 flex items-center justify-between">
           <div>
