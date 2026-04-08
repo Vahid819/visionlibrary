@@ -1,7 +1,12 @@
+'use client";'
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import LogoutButton from "@/components/LogoutButton";
-import Deskarengment from "@/components/Deskarengment";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { StatsSection } from "@/components/dashboard/stats-section";
+import { RecentBookings } from "@/components/dashboard/recent-bookings";
+import { QuickActions } from "@/components/dashboard/quick-actions";
+import { SeatLayout } from "@/components/dashboard/seat/seat-layout";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -12,10 +17,15 @@ export default async function Dashboard() {
   }
 
   return (
-    <div>
-      <h1>Welcome, {session.user.name}!</h1>
-      <LogoutButton />
-      <Deskarengment />
+    <div className="space-y-6">
+      <DashboardHeader />
+      <StatsSection />
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <RecentBookings />
+        <QuickActions />
+      </div>
+      <SeatLayout />
     </div>
   );
 }

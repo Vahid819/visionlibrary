@@ -1,9 +1,23 @@
-import React from 'react'
+"use client";
 
-function page() {
+import { PaymentHeader } from "@/components/dashboard/payment/payment-header";
+import { PaymentStats } from "@/components/dashboard/payment/payment-stats";
+import { PaymentTable } from "@/components/dashboard/payment/payment-table";
+import { PaymentFilters } from "@/components/dashboard/payment/payment-filters";
+
+export default function PaymentPage() {
   return (
-    <div>page</div>
-  )
-}
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <PaymentHeader />
 
-export default page
+      {/* Filters */}
+      <PaymentFilters />
+
+      {/* Stats */}
+      <PaymentStats />
+
+      {/* Table */}
+      <PaymentTable />
+    </div>
+  );
+}

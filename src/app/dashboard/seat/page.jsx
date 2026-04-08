@@ -1,25 +1,23 @@
-import React from 'react'
-import SeatCard from "@/components/SeatCard";
+"use client";
 
-const seats = [
-  { id: 1, student: "Vahid", paymentStatus: "paid", isOverdue: false },
-  { id: 2, student: "Rahul", paymentStatus: "due", isOverdue: true },
-  { id: 3, student: null },
-  { id: 4, student: "Aman", paymentStatus: "due", isOverdue: false },
-];
+import { SeatHeader } from "@/components/dashboard/seats/seat-header";
+import { SeatLayout } from "@/components/dashboard/seats/seat-layout";
+import { SeatSummary } from "@/components/dashboard/seats/seat-summary";
 
-function page() {
+export default function SeatPage() {
   return (
-    <div className="p-6">
-      <h1 className="text-xl font-semibold mb-6">Seat Management</h1>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <SeatHeader />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {seats.map((seat) => (
-          <SeatCard key={seat.id} seat={seat} />
-        ))}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Seat Layout */}
+        <div className="lg:col-span-2">
+          <SeatLayout />
+        </div>
+
+        {/* Summary Panel */}
+        <SeatSummary />
       </div>
     </div>
-  )
+  );
 }
-
-export default page
