@@ -3,7 +3,7 @@ import {
   SidebarTrigger,
   SidebarInset,
 } from "@/components/ui/sidebar";
-
+import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeProvider } from "next-themes";
@@ -21,6 +21,7 @@ export default function DashboardLayout({ children }) {
             <SidebarTrigger />
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               {children}
+              <Toaster richColors position="top-right" />
             </ThemeProvider>
           </main>
         </SidebarInset>

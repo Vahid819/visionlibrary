@@ -10,26 +10,16 @@ const seatSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
-    studentName: {
-        type: String,
-        default: "",
-    },
     lastUpdated: {
         type: Date,
         default: Date.now,
-    },
-    userId: {
-        type: String,
-
     },
     createdAt: {
         type: Date,
         default: Date.now,
     },
-    modifiedAt: {
-        type: Date,
-        default: Date.now,
-    },
+},{
+    timestamps: true,
 })
 
 const Seat = mongoose.models.Seat || mongoose.model("Seat", seatSchema);
