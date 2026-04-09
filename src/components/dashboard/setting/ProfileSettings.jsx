@@ -11,18 +11,23 @@ export default function ProfileSettings({ form, onChange, disabled }) {
       <CardContent className="grid md:grid-cols-2 gap-4">
         <div>
           <Label>Name</Label>
-          <Input name="name"
-  value={form.name || ""}
-  onChange={onChange}
-  disabled={!form.name}
-  />
+          <Input
+            name="name"
+            value={form.name || ""}
+            onChange={onChange}
+            disabled={disabled}
+          />
         </div>
         <div>
           <Label>Email</Label>
-          <Input name="email" value={form.email} onChange={onChange} disabled={disabled} />
+          <Input
+            name="email"
+            value={form.email}
+            onChange={onChange}
+            disabled={disabled}
+          />
         </div>
       </CardContent>
     </Card>
   );
 }
-
