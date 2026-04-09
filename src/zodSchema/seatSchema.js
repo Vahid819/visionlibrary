@@ -1,8 +1,10 @@
+import { roblox } from "better-auth";
 import z from "zod";
 
-export const seatSchema = z.object(
+export const SeatSchema = z.object(
     {
-        seatNumber: z.string().nonempty("Seat number is required"),
-        isAvailable: z.boolean().default(true),
+        row: z.number().min(0),
+        col: z.number().min(0),
+        
     }
 )
