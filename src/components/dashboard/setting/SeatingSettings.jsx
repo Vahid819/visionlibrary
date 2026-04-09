@@ -1,20 +1,42 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 import SeatingPreview from "./SeatingPreview";
+import { div } from "framer-motion/client";
 
-export default function SeatingSettings({ form, onChange, onNumber, disabled }) {
+export default function SeatingSettings({
+  form,
+  onChange,
+  onNumber,
+  disabled,
+}) {
   return (
-    <div className="space-y-4">
+    <div className="gap-3">
       <Card>
-        <CardHeader>
-          <CardTitle>Seating Layout</CardTitle>
-        </CardHeader>
-        <CardContent className="grid md:grid-cols-3 gap-4">
-          <Input name="rows" type="number" value={form.rows} onChange={onNumber} disabled={disabled} />
-          <Input name="cols" type="number" value={form.cols} onChange={onNumber} disabled={disabled} />
+        <CardContent className="grid grid-cols-2 gap-4 pt-6">
+          <div>
+            <Label>Rows</Label>
+            <Input
+              type="number"
+              name="rows"
+              value={form.rows}
+              onChange={onNumber}
+              disabled={disabled}
+            />
+          </div>
+
+          <div>
+            <Label>Columns</Label>
+            <Input
+              type="number"
+              name="cols"
+              value={form.cols}
+              onChange={onNumber}
+              disabled={disabled}
+            />
+          </div>
         </CardContent>
       </Card>
-
       <SeatingPreview rows={form.rows} cols={form.cols} />
     </div>
   );

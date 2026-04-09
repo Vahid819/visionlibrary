@@ -17,6 +17,11 @@ const userSchema = z
       .email("Invalid email address")
       .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please use a valid email")
       .trim(),
+    
+    phone: z
+      .string()
+      .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format")
+      .optional(),
 
     password: z
       .string()

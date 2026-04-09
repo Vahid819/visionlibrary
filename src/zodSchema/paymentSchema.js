@@ -1,6 +1,10 @@
 import z from "zod";
 
 export const paymentSchema = z.object({
+  upiId: z
+    .string()
+    .regex(/^[\w.-]+@[\w.-]+$/, "Invalid UPI ID format")
+    .optional(),
   paymenttype: {
     type: z
       .enum(["cash", "online"], "Invalid payment type")
@@ -10,6 +14,5 @@ export const paymentSchema = z.object({
   },
   paymentdate: {
     type: z.date().default(new Date()),
-  }
+  },
 });
-

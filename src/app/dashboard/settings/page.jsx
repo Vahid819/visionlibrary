@@ -15,26 +15,28 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
 
   // ✅ Saved data
-  const [form, setForm] = useState({
-    name: "Vahid",
-    email: "vahid@email.com",
-    phone: "9876543210",
+  const defaultForm = {
+    // Profile
+    name: "",
+    email: "",
+    phone: "",
 
-    upiId: "vahid@upi",
-    bankName: "HDFC Bank",
-    accountNumber: "1234567890",
-    ifsc: "HDFC0001234",
+    // Payment
+    upiId: "",
+    enableUpi: false,
+    qrImage: null,
 
-    enableUpi: true,
-    enableBank: true,
-
-    layoutName: "Main Hall",
+    // Seating
     rows: 5,
-    cols: 8,
-  });
+    cols: 5,
+
+    // Security
+    password: "",
+  };
+  const [form, setForm] = useState(defaultForm);
 
   // ✅ Editable copy
-  const [tempForm, setTempForm] = useState(form);
+  const [tempForm, setTempForm] = useState(defaultForm);
 
   // ======================
   // Handlers
@@ -61,29 +63,34 @@ export default function Page() {
     setTempForm(form); // copy latest data
     setIsEditing(true);
   };
-  
 
   const handleCancel = () => {
     setTempForm(form); // reset changes
     setIsEditing(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (data) => {
     setLoading(true);
 
-    try {
-      // simulate API
-      await new Promise((r) => setTimeout(r, 1000));
+  try {
+    const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+    await saveSettingsAPI(tempForm);
 
-      setForm(tempForm); // save changes
-      setIsEditing(false);
+    const result = await res.json();
+    setIsEditing(false);
 
-      toast.success("Settings saved successfully!");
-    } catch {
-      toast.error("Failed to save settings");
-    } finally {
-      setLoading(false);
-    }
+    toast.success("Settings saved successfully!");
+  } catch (error) {
+    toast.error(error.message || "Failed to save settings");
+  } finally {
+    setLoading(false);
+  }
   };
 
   // ======================
@@ -128,16 +135,18 @@ export default function Page() {
         </TabsContent>
 
         <TabsContent value="security">
-          <SecuritySettings disabled={!isEditing} />
+          <SecuritySettings
+            form={tempForm}
+            onChange={handleChange}
+            disabled={!isEditing}
+          />
         </TabsContent>
       </Tabs>
 
       {/* Buttons */}
       <div className="flex justify-end gap-3">
         {!isEditing ? (
-          <Button onClick={handleEdit}>
-            Edit Settings
-          </Button>
+          <Button onClick={handleEdit}>Edit Settings</Button>
         ) : (
           <>
             <Button variant="outline" onClick={handleCancel}>
@@ -151,4 +160,5 @@ export default function Page() {
         )}
       </div>
     </div>
-  )};
+  );
+}

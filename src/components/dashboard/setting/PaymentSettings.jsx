@@ -3,8 +3,18 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { paymentSchema } from "@/zodSchema/paymentSchema";
 
 export default function PaymentSettings({ form, setForm, disabled }) {
+  const {
+    register,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(paymentSchema),
+  });
+
   return (
     <Card>
       <CardHeader>
@@ -20,12 +30,19 @@ export default function PaymentSettings({ form, setForm, disabled }) {
         </div>
 
         {form.enableUpi && (
+          <div>
           <Input
             placeholder="UPI ID"
+            {...register("upiId")}
             value={form.upiId}
             disabled={disabled}
             onChange={(e) => setForm({ ...form, upiId: e.target.value })}
           />
+          {errors.upiId && (
+            <p className="text-sm text-red-500 mt-1">{errors.upiId.message}</p>
+          )}
+          </div>
+          
         )}
       </CardContent>
       <CardContent>
@@ -65,6 +82,7 @@ export default function PaymentSettings({ form, setForm, disabled }) {
                     qrImage: null,
                   }))
                 }
+                disabled={disabled}
                 className="absolute -top-2 -right-2 bg-gray-600 text-white rounded-full p-1 shadow hover:bg-gray-400 transition"
               >
                 <X size={14} />
