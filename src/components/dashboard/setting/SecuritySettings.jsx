@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { userSchema } from "@/zodSchema/userSchema";
+import  userSchema  from "@/zodSchema/userSchema";
 
 export default function SecuritySettings({ form, onChange, disabled }) {
   const {

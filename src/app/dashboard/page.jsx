@@ -10,7 +10,7 @@ import { SeatLayout } from "@/components/dashboard/seat/seat-layout";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
-  // console.log("Session in dashboard:", session);
+  console.log("Session in dashboard:", session);
 
   if (!session) {
     return <div>Not authorized</div>;
