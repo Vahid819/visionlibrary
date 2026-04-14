@@ -6,7 +6,7 @@ import { SeatItem } from "./seat-item";
 
 const totalSeats = 40;
 const seatsPerRow = 8;
-const occupiedSeats = [2, 3, 7, 15, 22];
+const Pendingamount = [2, 3, 7, 15, 22];
 
 // 🔥 animation variants
 const containerVariants = {
@@ -27,7 +27,7 @@ export function SeatGrid() {
   const [selected, setSelected] = useState([]);
 
   const toggleSeat = (seat) => {
-    if (occupiedSeats.includes(seat)) return;
+    if (Pendingamount.includes(seat)) return;
 
     setSelected((prev) =>
       prev.includes(seat)
@@ -54,7 +54,7 @@ export function SeatGrid() {
                 <motion.div key={seatNumber} variants={itemVariants}>
                   <SeatItem
                     seatId={seatNumber}
-                    isOccupied={occupiedSeats.includes(seatNumber)}
+                    isPending={Pendingamount.includes(seatNumber)}
                     isSelected={selected.includes(seatNumber)}
                     onClick={() => toggleSeat(seatNumber)}
                   />

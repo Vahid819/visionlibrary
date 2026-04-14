@@ -1,25 +1,39 @@
 import mongoose from "mongoose";
 
 const seatSchema = new mongoose.Schema({
-    seatNumber: {
+    id: {
         type: String,
         required: true,
-        unique: true,
+        unique: true
     },
-    isAvailable: {
-        type: Boolean,
-        default: true,
+    row:{
+        type: Number,
+        required: true
     },
-    lastUpdated: {
+    column: {
+        type: Number,
+        required: true
+    },
+    seat : [
+        {
+            seatNumber: {
+                type: String,
+                required: true,
+                unique: true
+            },
+            isAvailable: {
+                type: Boolean,
+                default: true
+            }
+        }
+    ],
+    seatUpdatedAt: {
         type: Date,
-        default: Date.now,
+        default: Date.now
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-},{
-    timestamps: true,
+},
+{
+    timestamps: true
 })
 
 const Seat = mongoose.models.Seat || mongoose.model("Seat", seatSchema);

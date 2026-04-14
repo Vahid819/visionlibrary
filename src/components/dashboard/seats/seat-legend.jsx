@@ -3,7 +3,7 @@ export function SeatLegend() {
     <div className="flex gap-4 text-xs justify-center">
       <Legend color="bg-background border" label="Available" />
       <Legend color="bg-primary" label="Selected" />
-      <Legend color="bg-muted" label="Occupied" />
+      <Legend color="bg-muted" label="Pending" />
     </div>
   );
 }

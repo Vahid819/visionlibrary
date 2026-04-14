@@ -68,7 +68,7 @@ export default function Settingsclient({ session }) {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/settings", {
+      const res = await fetch("/api/setting", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -16,7 +16,9 @@ export default function RootLayout({ children }) {
       className={inter.className}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col"
+      cz-shortcut-listen="true"
+      >
         <Providers>
           {children}
         </Providers>
