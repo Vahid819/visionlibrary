@@ -4,10 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { SeatItem } from "./seat-item";
 
-const totalSeats = 40;
-const seatsPerRow = 8;
-const occupiedSeats = [2, 3, 7, 15, 22];
-
 // 🔥 animation variants
 const containerVariants = {
   hidden: {},
@@ -23,47 +19,47 @@ const itemVariants = {
   visible: { opacity: 1, scale: 1 },
 };
 
-export function SeatGrid() {
+export function SeatGrid({ seats }) {
   const [selected, setSelected] = useState([]);
 
-  const toggleSeat = (seat) => {
-    if (occupiedSeats.includes(seat)) return;
+  const seatKeys = Object.keys(seats || {});
+
+  const toggleSeat = (seatKey) => {
+    // 🚫 prevent selecting occupied seats
+    if (seats[seatKey]?.isOccupied) return;
 
     setSelected((prev) =>
-      prev.includes(seat)
-        ? prev.filter((s) => s !== seat)
-        : [...prev, seat]
+      prev.includes(seatKey)
+        ? prev.filter((s) => s !== seatKey)
+        : [...prev, seatKey]
     );
   };
 
+  if (!seatKeys.length) {
+    return <p className="text-center text-muted-foreground">No seats found</p>;
+  }
+
   return (
     <motion.div
-      className="space-y-2"
+      className="grid grid-cols-8 gap-2 justify-center"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      {Array.from({ length: Math.ceil(totalSeats / seatsPerRow) }).map(
-        (_, rowIndex) => (
-          <div key={rowIndex} className="flex justify-center gap-2">
-            {Array.from({ length: seatsPerRow }).map((_, colIndex) => {
-              const seatNumber = rowIndex * seatsPerRow + colIndex + 1;
-              if (seatNumber > totalSeats) return null;
+      {seatKeys.map((seatKey) => {
+        const seat = seats[seatKey];
 
-              return (
-                <motion.div key={seatNumber} variants={itemVariants}>
-                  <SeatItem
-                    seatId={seatNumber}
-                    isOccupied={occupiedSeats.includes(seatNumber)}
-                    isSelected={selected.includes(seatNumber)}
-                    onClick={() => toggleSeat(seatNumber)}
-                  />
-                </motion.div>
-              );
-            })}
-          </div>
-        )
-      )}
+        return (
+          <motion.div key={seatKey} variants={itemVariants}>
+            <SeatItem
+              seatId={seatKey}
+              isPending={seat?.isOccupied} // 🔥 from DB
+              isSelected={selected.includes(seatKey)}
+              onClick={() => toggleSeat(seatKey)}
+            />
+          </motion.div>
+        );
+      })}
     </motion.div>
   );
 }

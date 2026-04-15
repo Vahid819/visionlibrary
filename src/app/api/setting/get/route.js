@@ -1,23 +1,44 @@
-import connectDB from "@/lib/db";
+import { connectDB } from "@/lib/db";
 import Seat from "@/models/Seats";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { NextResponse } from "next/server";
 
-export default async function GET(res){
-    const session = await getServerSession(authOptions)
+export async function GET() {
+  try {
     await connectDB();
-    try {
-        const id = await session.user.id
-        const userid = await Seat.findOne(id);
-        if(!userid){
-            console.log("user id not found ")
-            return
-        }
-        console.log({row , cols } = await Seat. find(row, column))
-        return new Response(JSON.stringify({message: "data will show"}), {status: 201})
-        
-    } catch (error) {
-        console.error("user data not featuch", error);
-        return new Response(JSON.stringify({error: "Failed to featuch data"}), { status: 400 });
-    }
+
+    const seats = await Seat.find();
+
+    const seatObject = {};
+    let counter = 1; // 🔥 numeric numbering
+
+    seats.forEach((doc) => {
+      doc.seat.forEach((seatItem) => {
+        seatObject[counter] = {
+          _id: seatItem._id,
+          isOccupied: !seatItem.isAvailable,
+          row: doc.row,
+          column: doc.column,
+          parentId: doc._id,
+        };
+
+        counter++; // 🔥 increment
+      });
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: seatObject,
+    });
+  } catch (error) {
+    console.error("API ERROR:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        data: {},
+        message: "Failed to fetch seats",
+      },
+      { status: 500 }
+    );
+  }
 }

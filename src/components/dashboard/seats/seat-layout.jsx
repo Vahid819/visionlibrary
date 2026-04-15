@@ -4,12 +4,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SeatGrid } from "./seat-grid";
 import { SeatLegend } from "./seat-legend";
 
-export function SeatLayout() {
+export function SeatLayout({ seats }) {
   return (
     <Card className="p-4 bg-background/60 backdrop-blur border border-border/50">
       <CardContent className="space-y-4">
         <SeatLegend />
-        <SeatGrid />
+
+        {/* ✅ Pass seats to grid */}
+        <SeatGrid seats={seats} />
       </CardContent>
     </Card>
   );
