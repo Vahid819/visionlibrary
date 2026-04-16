@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
-export function StatCard({ title, value, icon: Icon }) {
+export function StatCard({ title, value, icon: Icon, trend }) {
+  const isPositive = trend >= 0;
+
   return (
     <motion.div
       variants={{
@@ -24,9 +26,18 @@ export function StatCard({ title, value, icon: Icon }) {
             <p className="text-xs text-muted-foreground">{title}</p>
             <p className="text-2xl font-bold">{value}</p>
 
-            <div className="flex items-center gap-1 text-xs text-green-500 mt-1">
-              <TrendingUp size={12} />
-              +12%
+            {/* 🔥 Dynamic Trend */}
+            <div
+              className={`flex items-center gap-1 text-xs mt-1 ${
+                isPositive ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {isPositive ? (
+                <TrendingUp size={12} />
+              ) : (
+                <TrendingDown size={12} />
+              )}
+              {trend}% 
             </div>
           </div>
 
