@@ -35,7 +35,7 @@ export function StatsSection() {
         const available = total - occupied;
 
         // 💰 example revenue logic (₹50 per occupied seat)
-        const revenue = occupied * 50;
+        const revenue = occupied * 500;
 
         // ✅ update state
         setStats([

@@ -18,7 +18,7 @@ const seatSchema = new mongoose.Schema({
         {
             seatNumber: {
                 type: String,
-                required: true,
+                required: true, 
                 unique: true
             },
             isAvailable: {

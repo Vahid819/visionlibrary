@@ -25,7 +25,7 @@ export default function DashboardClient({ session }) {
 
       const text = await res.text();
       const result = text ? JSON.parse(text) : {};
-
+      console.log(result)
       setSeats(result?.data || {});
     } catch (err) {
       console.error("Error fetching seats:", err);

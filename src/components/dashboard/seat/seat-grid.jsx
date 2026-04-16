@@ -4,13 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { SeatItem } from "./seat-item";
 
-// 🔥 animation variants
 const containerVariants = {
   hidden: {},
   visible: {
-    transition: {
-      staggerChildren: 0.03,
-    },
+    transition: { staggerChildren: 0.03 },
   },
 };
 
@@ -25,8 +22,10 @@ export function SeatGrid({ seats }) {
   const seatKeys = Object.keys(seats || {});
 
   const toggleSeat = (seatKey) => {
-    // 🚫 prevent selecting occupied seats
-    if (seats[seatKey]?.isOccupied) return;
+    const seat = seats[seatKey];
+
+    // 🚫 block if occupied
+    if (seat?.isOccupied) return;
 
     setSelected((prev) =>
       prev.includes(seatKey)
@@ -35,13 +34,9 @@ export function SeatGrid({ seats }) {
     );
   };
 
-  if (!seatKeys.length) {
-    return <p className="text-center text-muted-foreground">No seats found</p>;
-  }
-
   return (
     <motion.div
-      className="grid grid-cols-8 gap-2 justify-center"
+      className="grid grid-cols-8 gap-2"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -53,7 +48,7 @@ export function SeatGrid({ seats }) {
           <motion.div key={seatKey} variants={itemVariants}>
             <SeatItem
               seatId={seatKey}
-              isPending={seat?.isOccupied} // 🔥 from DB
+              isOccupied={seat?.isOccupied} // ✅ PASS THIS
               isSelected={selected.includes(seatKey)}
               onClick={() => toggleSeat(seatKey)}
             />

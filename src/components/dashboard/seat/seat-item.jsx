@@ -3,12 +3,18 @@
 import { motion } from "framer-motion";
 
 export function SeatItem({ seatId, isOccupied, isSelected, onClick }) {
+  const isDisabled = isOccupied; // 🔥 occupied = disabled
+
   return (
     <motion.button
-      onClick={onClick}
+      onClick={() => {
+        if (isDisabled) return; // 🚫 HARD BLOCK
+        onClick();
+      }}
+      disabled={isDisabled}
       layout
-      whileHover={!isOccupied ? { scale: 1.15, y: -2 } : {}}
-      whileTap={!isOccupied ? { scale: 0.9 } : {}}
+      whileHover={!isDisabled ? { scale: 1.15, y: -2 } : {}}
+      whileTap={!isDisabled ? { scale: 0.9 } : {}}
       animate={
         isSelected
           ? {
@@ -23,16 +29,16 @@ export function SeatItem({ seatId, isOccupied, isSelected, onClick }) {
         transition-all relative
 
         ${
-          isOccupied
-            ? "bg-muted text-muted-foreground cursor-not-allowed"
+          isDisabled
+            ? "bg-red-400 text-white cursor-not-allowed opacity-60"
             : isSelected
             ? "bg-primary text-primary-foreground shadow-lg"
             : "bg-background border border-border hover:bg-muted/40"
         }
       `}
     >
-      {/* 🔥 glow effect */}
-      {isSelected && (
+      {/* glow */}
+      {isSelected && !isDisabled && (
         <span className="absolute inset-0 rounded-lg bg-primary/20 blur-md -z-10" />
       )}
 
