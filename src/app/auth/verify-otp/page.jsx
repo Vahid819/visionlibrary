@@ -1,8 +1,11 @@
 "use client";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import dynamicImport from "next/dynamic";
 import { motion } from "framer-motion";
 
 import {
@@ -14,16 +17,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function VerifyOTPPage() {
+function VerifyOTPPage() {
   const params = useSearchParams();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
-
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(60);
+
+  // ✅ Get email safely
+  useEffect(() => {
+    const value = params.get("email");
+    if (value) setEmail(value);
+  }, [params]);
 
   // ⏱ Timer countdown
   useEffect(() => {
@@ -36,26 +44,19 @@ export default function VerifyOTPPage() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  useEffect(() => {
-  const value = params.get("email");
-  if (value) setEmail(value);
-}, [params]);
-
-  // ⚡ Auto submit when OTP complete
+  // ⚡ Auto submit
   useEffect(() => {
     if (otp.length === 6) {
       handleSubmit();
     }
   }, [otp]);
 
-  // ✅ Verify OTP
+  // ✅ Submit OTP
   const handleSubmit = async () => {
-    if (otp.length !== 6 || loading) return;
+    if (!email || otp.length !== 6 || loading) return;
 
     setLoading(true);
     setError("");
-
-    if (!email) return;
 
     try {
       const res = await fetch("/api/auth/otpverification", {
@@ -71,7 +72,6 @@ export default function VerifyOTPPage() {
       if (!res.ok) {
         setError(data.error || "Invalid OTP ❌");
       } else {
-        // ✅ success redirect
         router.push("/dashboard");
       }
     } catch (err) {
@@ -83,7 +83,7 @@ export default function VerifyOTPPage() {
 
   // 🔁 Resend OTP
   const handleResend = async () => {
-    if (timer > 0) return;
+    if (!email || timer > 0) return;
 
     try {
       await fetch("/api/auth/resend-otp", {
@@ -94,7 +94,7 @@ export default function VerifyOTPPage() {
         body: JSON.stringify({ email }),
       });
 
-      setTimer(60); // reset timer
+      setTimer(60);
     } catch (err) {
       console.error(err);
     }
@@ -102,7 +102,6 @@ export default function VerifyOTPPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-100 via-white to-cyan-100">
-      
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -111,8 +110,6 @@ export default function VerifyOTPPage() {
       >
         <Card className="backdrop-blur-xl bg-white/60 border border-white/30 shadow-2xl rounded-2xl">
           <CardContent className="p-6 space-y-6 text-center">
-
-            {/* Title */}
             <h2 className="text-2xl font-bold">Verify OTP 🔐</h2>
 
             <p className="text-sm text-gray-600">
@@ -121,7 +118,6 @@ export default function VerifyOTPPage() {
               <span className="font-medium text-indigo-600">{email}</span>
             </p>
 
-            {/* OTP Input */}
             <div className="flex justify-center">
               <InputOTP
                 maxLength={6}
@@ -136,12 +132,8 @@ export default function VerifyOTPPage() {
               </InputOTP>
             </div>
 
-            {/* ❌ Error Message */}
-            {error && (
-              <p className="text-red-500 text-sm">{error}</p>
-            )}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
 
-            {/* Button */}
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Button
                 onClick={handleSubmit}
@@ -152,7 +144,6 @@ export default function VerifyOTPPage() {
               </Button>
             </motion.div>
 
-            {/* Resend */}
             <p className="text-sm text-gray-500">
               Didn’t receive code?{" "}
               <span
@@ -166,10 +157,14 @@ export default function VerifyOTPPage() {
                 {timer > 0 ? `Resend in ${timer}s` : "Resend"}
               </span>
             </p>
-
           </CardContent>
         </Card>
       </motion.div>
     </div>
   );
 }
+
+// ✅ FINAL FIX → disable SSR completely
+export default dynamicImport(() => Promise.resolve(VerifyOTPPage), {
+  ssr: false,
+});
