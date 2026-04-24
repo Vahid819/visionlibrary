@@ -47,16 +47,16 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#020617] text-white">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#0f172a] via-[#1e293b] to-[#020617] text-white">
 
       {/* Glow Background */}
-      <div className="absolute w-[400px] h-[400px] bg-indigo-600/30 blur-3xl rounded-full top-10 left-10"></div>
+      <div className="absolute w-100 h-100 bg-indigo-600/30 blur-3xl rounded-full top-10 left-10"></div>
 
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="relative z-10 w-[400px]"
+        className="relative z-10 w-100"
       >
         <Card className="backdrop-blur-xl bg-white/10 border border-white/10 shadow-2xl rounded-2xl">
           <CardContent className="p-6 space-y-5">
