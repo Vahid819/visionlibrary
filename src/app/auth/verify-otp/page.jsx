@@ -18,7 +18,7 @@ export default function VerifyOTPPage() {
   const params = useSearchParams();
   const router = useRouter();
 
-  const email = params.get("email");
+  const [email, setEmail] = useState("");
 
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,6 +36,11 @@ export default function VerifyOTPPage() {
     return () => clearInterval(interval);
   }, [timer]);
 
+  useEffect(() => {
+  const value = params.get("email");
+  if (value) setEmail(value);
+}, [params]);
+
   // ⚡ Auto submit when OTP complete
   useEffect(() => {
     if (otp.length === 6) {
@@ -49,6 +54,8 @@ export default function VerifyOTPPage() {
 
     setLoading(true);
     setError("");
+
+    if (!email) return;
 
     try {
       const res = await fetch("/api/auth/otpverification", {
