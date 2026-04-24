@@ -1,21 +1,51 @@
-"use client";
+import { columns } from "@/components/messages/columns";
+import { DataTable } from "@/components/messages/data-table";
+import Message from "@/components/messages/messages";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { MessageCircle, Check } from "lucide-react";
+async function getData() {
+  // Fetch data from your API here.
+  return [
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 300,
+      status: "pending",
+      email: "vahid@example.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 500,
+      status: "pending",
+      email: "john@example.com",
+    },
+    // ...
+  ];
+}
 
-// 🔥 Demo data (seat + student mapping)
-const students = [
-  { id: 1, name: "Rahul", phone: "919876543210", seat: "A1" },
-  { id: 2, name: "Amit", phone: "919812345678", seat: "A2" },
-  { id: 3, name: "Priya", phone: "919999888777", seat: "B1" },
-];
+export default async function DemoPage() {
+  const data = await getData();
 
-export default function page() {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Message Students</h1>
-      <div className="space-y-4"></div>
+    <div className="container flex flex-wrap mx-auto py-10">
+      <div className="mb-4 w-full">
+        <h1 className="text-2xl font-bold">Messages</h1>
+        <p className="text-muted-foreground">
+          A list of all the messages in your account.
+        </p>
+      </div>
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <div className="rounded-md border w-full px-2 py-4 h-auto">
+          <DataTable columns={columns} data={data} />
+        </div>
+        <div>
+          <Message />
+        </div>
+      </div>
     </div>
   );
 }
