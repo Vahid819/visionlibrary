@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -13,6 +13,23 @@ import SecuritySettings from "@/components/dashboard/setting/SecuritySettings";
 export default function Settingsclient({ session }) {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({});
+
+    // ====================== 
+  // Fetch settings on mount
+  // ======================
+
+  useEffect(()=>{
+    const fetchSettings = async ()=>{
+      try {
+        const res = await fetch("/api/setting");
+        const data = await res.json();
+        setData(data);
+      } catch (error) {
+        console.error("❌ Failed to fetch settings:", error);
+      }
+    }
+  }, []);
 
   // ✅ FIXED default values
   const defaultForm = {
@@ -24,8 +41,8 @@ export default function Settingsclient({ session }) {
     enableUpi: false,
     qrImage: null,
 
-    rows: 5,
-    cols: 5,
+    rows: data.rows || 5,
+    cols: data.cols || 5,
 
     password: "",
   };
