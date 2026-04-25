@@ -33,6 +33,8 @@ export default function LoginPage() {
       redirect: false,
     });
 
+    console.log("SignIn Response:", res);
+
     setLoading(false);
 
     if (res.error) {

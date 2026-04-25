@@ -31,6 +31,7 @@ export async function connectDB() {
 
   try {
     cached.conn = await cached.promise;
+    console.log("MongoDB Connected:", cached.conn.connection.host);
   } catch (error) {
     cached.promise = null;
     throw error;

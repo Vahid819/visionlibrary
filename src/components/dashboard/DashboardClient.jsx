@@ -64,7 +64,7 @@ export default function DashboardClient({ session }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/40 p-4 md:p-6 space-y-6">
+    <div className="min-h-screen bg-linear-to-br from-background to-muted/40 p-4 md:p-6 space-y-6">
       
       {/* 🔝 Header */}
       <div className="sticky top-0 z-10 backdrop-blur bg-background/70 border-b border-border/40 rounded-xl p-3">

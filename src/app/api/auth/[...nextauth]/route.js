@@ -17,52 +17,78 @@ export const authOptions = {
       },
 
       async authorize(credentials) {
-        await connectDB();
+        console.log("🔥 AUTHORIZE START");
 
-        const user = await UserModel.findOne({
-          email: credentials.email,
-        });
+        try {
+          await connectDB();
+          console.log("✅ DB Connected");
 
-        if (!user) throw new Error("User not found");
-        if (!user.userverified)
-          throw new Error("Please verify your email first");
+          console.log("📩 Credentials:", credentials);
 
-        const isMatch = await compare(credentials.password, user.password);
-        if (!isMatch) throw new Error("Invalid credentials");
+          const user = await UserModel.findOne({
+            email: credentials.email,
+          });
 
-        return {
-          id: user._id.toString(),
-          email: user.email,
-          name: user.firstname,
-        };
+          console.log("👤 User found:", user ? "YES" : "NO");
+
+          if (!user) {
+            console.log("❌ User not found");
+            return null;
+          }
+
+          if (!user.userverified) {
+            console.log("❌ User not verified");
+            return null;
+          }
+
+          const isMatch = await compare(credentials.password, user.password);
+
+          console.log("🔐 Password match:", isMatch);
+
+          if (!isMatch) {
+            console.log("❌ Invalid password");
+            return null;
+          }
+
+          console.log("✅ LOGIN SUCCESS");
+
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.firstname,
+          };
+        } catch (error) {
+          console.error("🚨 AUTHORIZE ERROR:", error);
+          return null;
+        }
       },
     }),
   ],
 
   // ✅ ✅ MOVE HERE (TOP LEVEL)
   callbacks: {
-  async jwt({ token, user }) {
-    if (user) {
-      // console.log("JWT USER:", user);
+    async jwt({ token, user }) {
+      if (user) {
+        // console.log("JWT USER:", user);
 
-      token.id = user.id;
-      token.email = user.email;
-      token.name = user.name; // ✅ FIXED
-    }
-    return token;
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name; // ✅ FIXED
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      // console.log("SESSION TOKEN:", token);
+
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.name = token.name; // ✅ FIXED
+      }
+      return session;
+    },
   },
-
-  async session({ session, token }) {
-    // console.log("SESSION TOKEN:", token);
-
-    if (session.user) {
-      session.user.id = token.id;
-      session.user.email = token.email;
-      session.user.name = token.name; // ✅ FIXED
-    }
-    return session;
-  },
-},
 
   session: {
     strategy: "jwt",

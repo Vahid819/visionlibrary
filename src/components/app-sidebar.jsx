@@ -38,6 +38,7 @@ import {
   CircleEllipsis,
   MessageCircleMore,
 } from "lucide-react";
+import LogoutButton from "./LogoutButton";
 
 export function AppSidebar() {
   return (
@@ -244,6 +245,10 @@ export function AppSidebar() {
                   </p>
                   <ThemeToggle />
                 </div>
+                {/* LogoutButton */}
+                <Separator className="my-1" />
+                <LogoutButton />
+
               </PopoverContent>
             </Popover>
           </SidebarMenuItem>
