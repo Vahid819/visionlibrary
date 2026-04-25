@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,7 +46,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-[#020617] flex items-center justify-center px-4 relative overflow-hidden">
-
+      
       {/* 🌈 Soft Glow Background */}
       <div className="absolute w-100 h-100 bg-indigo-500/20 blur-3xl rounded-full -top-25 -left-25" />
       <div className="absolute w-75 h-75 bg-cyan-400/20 blur-3xl rounded-full -bottom-25 -right-25" />
@@ -58,7 +58,11 @@ export default function LoginPage() {
         transition={{ duration: 0.4 }}
         className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8 text-white"
       >
-
+        <Link href="/" >
+          <Button className="flex items-center gap-2 hover:bg-gray-500/20 cursor-pointer" variant="outline">
+           <ArrowLeft /> back
+          </Button>
+        </Link>
         {/* Title */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-semibold">Welcome Back 👋</h2>
