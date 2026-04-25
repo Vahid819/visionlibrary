@@ -23,6 +23,7 @@ export default function Settingsclient({ session }) {
       try {
         const res = await fetch("/api/setting/get");
         const data = await res.json();
+        console.log("Fetched settings:", data);
         setData(data);
       } catch (error) {
         console.error("❌ Failed to fetch settings:", error);
