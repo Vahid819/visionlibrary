@@ -6,9 +6,10 @@ import { sendOTPEmail } from "@/helper/setoptemail";
 
 export async function POST(req){
     await connectDB();
-
+    console.log("Connected to DB in signup route");
     try {
         const body = await req.json();
+        console.log("Received signup data:", body);
         const existingUser = await UserModel.findOne({email: body.email});
 
         if(existingUser){
@@ -30,7 +31,7 @@ export async function POST(req){
             otpExpiryDate: otpExpiryDate,
         })
 
-        // console.log("New user created:", newUser);
+        console.log("New user created:", newUser);
 
         await newUser.save();
         return new Response(JSON.stringify({ message: "User registered successfully" }), { status: 201 });
