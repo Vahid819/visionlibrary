@@ -22,7 +22,7 @@ export default function Settingsclient({ session }) {
   useEffect(()=>{
     const fetchSettings = async ()=>{
       try {
-        const res = await fetch("/api/setting");
+        const res = await fetch("/api/setting/get");
         const data = await res.json();
         setData(data);
       } catch (error) {
