@@ -1,8 +1,3 @@
-import Seat from "@/models/Seats";
-import connectDB from "@/lib/db";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
 export async function POST(req) {
   const session = await getServerSession(authOptions);
   await connectDB();
@@ -15,20 +10,18 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    console.log("Received seatting data:", body);
     const { rows, cols } = body;
 
-    // // 🔥 generate seats
-    // const seats = Array.from({ length: rows }, (_, rowIndex) =>
-    //   Array.from({ length: cols }, (_, colIndex) => ({
-    //     seatNumber: `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`,
-    //     isAvailable: true,
-    //   }))
-    // ).flat();
+    // ✅ generate seats (FIXED)
+    const seats = Array.from({ length: rows }, (_, rowIndex) =>
+      Array.from({ length: cols }, (_, colIndex) => ({
+        seatNumber: `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`,
+        isAvailable: true,
+      }))
+    ).flat();
 
-    // ✅ UPSERT (update if exists, else create)
     const updatedSeatting = await Seat.findOneAndUpdate(
-      { id: session.user.id }, // 🔍 find existing
+      { id: session.user.id },
       {
         row: rows,
         column: cols,
@@ -37,7 +30,7 @@ export async function POST(req) {
       },
       {
         new: true,
-        upsert: true, // 🔥 key part
+        upsert: true,
       }
     );
 
