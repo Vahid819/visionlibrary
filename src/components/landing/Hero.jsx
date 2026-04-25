@@ -26,8 +26,8 @@ export default function Hero() {
       />
 
       {/* Radial glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-teal-400/8 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-teal-400/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 h-150 bg-teal-400/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-100 h-100 bg-teal-400/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Badge */}
       <motion.div {...fadeUp(0.1)} className="relative z-10 mb-7">
@@ -47,7 +47,7 @@ export default function Hero() {
         <span className="text-teal-400 relative">
           Productivity
           <span
-            className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-400 to-transparent"
+            className="absolute -bottom-1 left-0 right-0 h-px bg-linear-to-r from-transparent via-teal-400 to-transparent"
           />
         </span>
         <br />
@@ -102,7 +102,7 @@ export default function Hero() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
       >
         <span className="text-xs text-white/20 tracking-widest uppercase">Scroll</span>
-        <div className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent" />
+        <div className="w-px h-8 bg-linear-to-b from-white/20 to-transparent" />
       </motion.div>
     </section>
   );

@@ -34,7 +34,7 @@ export default function DashboardMock() {
       {/* Scan line animation */}
       <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden rounded-2xl">
         <motion.div
-          className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-teal-400/60 to-transparent"
+          className="absolute left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-teal-400/60 to-transparent"
           animate={{ y: [-10, 440] }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
         />
@@ -51,7 +51,7 @@ export default function DashboardMock() {
       </div>
 
       {/* Dashboard body */}
-      <div className="bg-[#060f1e] grid grid-cols-[160px_1fr] min-h-[380px]">
+      <div className="bg-[#060f1e] grid grid-cols-[160px_1fr] min-h-95">
 
         {/* Sidebar */}
         <div className="bg-black/20 p-4 border-r border-white/5">
@@ -96,7 +96,7 @@ export default function DashboardMock() {
             {KPI_CARDS.map((card) => (
               <div
                 key={card.label}
-                className="bg-white/[0.03] border border-white/5 rounded-lg p-3"
+                className="bg-white/3 border border-white/5 rounded-lg p-3"
               >
                 <div className="text-xs text-white/40 mb-1.5">{card.label}</div>
                 <div
@@ -119,7 +119,7 @@ export default function DashboardMock() {
           <div className="grid grid-cols-[1fr_140px] gap-3">
 
             {/* Seat map */}
-            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-3">
+            <div className="bg-white/3 border border-white/5 rounded-lg p-3">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-semibold text-white/60">Seat Map</span>
                 <div className="flex items-center gap-3 text-xs text-white/30">
@@ -150,7 +150,7 @@ export default function DashboardMock() {
             </div>
 
             {/* Recent activity */}
-            <div className="bg-white/[0.03] border border-white/5 rounded-lg p-3">
+            <div className="bg-white/3 border border-white/5 rounded-lg p-3">
               <div className="text-xs font-semibold text-white/60 mb-3">Recent Activity</div>
               <div className="space-y-2">
                 {["Rahul Nama", "Maks Sam", "Expiring Member", "Serica Nscion"].map((name, i) => (

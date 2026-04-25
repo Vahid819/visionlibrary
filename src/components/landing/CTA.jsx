@@ -14,8 +14,8 @@ export default function CTA() {
         className="relative rounded-3xl border border-teal-400/20 bg-[#060f1e] p-12 md:p-20 text-center overflow-hidden"
       >
         {/* Background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-teal-400/6 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-teal-400/4 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-100 bg-teal-400/6 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-75 h-75 bg-teal-400/4 rounded-full blur-3xl pointer-events-none" />
 
         {/* Grid overlay */}
         <div

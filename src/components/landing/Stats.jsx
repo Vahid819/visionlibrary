@@ -49,7 +49,7 @@ export default function Stats() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/5 border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02]"
+        className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/5 border border-white/5 rounded-2xl overflow-hidden bg-white/2"
       >
         {STATS.map((s, i) => (
           <div key={i} className="p-8 md:p-10 text-center">

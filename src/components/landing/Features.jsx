@@ -90,10 +90,10 @@ export default function Features() {
           <motion.div
             key={i}
             variants={cardVariants}
-            className="group relative bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 hover:border-teal-400/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+            className="group relative bg-white/3 border border-white/5 rounded-2xl p-6 hover:border-teal-400/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
           >
             {/* Hover glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-teal-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-br from-teal-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
 
             {/* Tag */}
             <span className="inline-block text-xs font-semibold text-teal-400/70 tracking-widest uppercase mb-4 px-2 py-1 bg-teal-400/5 rounded-md border border-teal-400/10">

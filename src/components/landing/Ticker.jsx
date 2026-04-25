@@ -17,7 +17,7 @@ export default function Ticker() {
   const doubled = [...ITEMS, ...ITEMS];
 
   return (
-    <div className="py-5 border-y border-teal-400/10 bg-teal-400/[0.02] overflow-hidden">
+    <div className="py-5 border-y border-teal-400/10 bg-teal-400/2 overflow-hidden">
       <div
         className="flex gap-12 whitespace-nowrap"
         style={{

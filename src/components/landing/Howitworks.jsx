@@ -56,7 +56,7 @@ export default function HowItWorks() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
         {/* Connector line */}
-        <div className="hidden lg:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-teal-400/20 to-transparent" />
+        <div className="hidden lg:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent" />
 
         {STEPS.map((s, i) => (
           <motion.div
