@@ -17,41 +17,25 @@ export const authOptions = {
       },
 
       async authorize(credentials) {
-        // console.log("🔥 AUTHORIZE START");
+        console.log("🔥 AUTHORIZE START");
 
         try {
           await connectDB();
-          // console.log("✅ DB Connected");
+          console.log("✅ DB Connected");
 
-          // console.log("📩 Credentials:", credentials);
+          const user = await UserModel.findOne({ email: credentials.email });
+          console.log("👤 User found:", user ? "YES" : "NO");
+          console.log("✅ User verified:", user?.userverified);
 
-          const user = await UserModel.findOne({
-            email: credentials.email,
-          });
-
-          // console.log("👤 User found:", user ? "YES" : "NO");
-
-          if (!user) {
-            console.log("❌ User not found");
-            return null;
-          }
-
-          if (!user.userverified) {
-            console.log("❌ User not verified");
-            return null;
-          }
+          if (!user) return null;
+          if (!user.userverified) return null;
 
           const isMatch = await compare(credentials.password, user.password);
+          console.log("🔐 Password match:", isMatch);
 
-          // console.log("🔐 Password match:", isMatch);
+          if (!isMatch) return null;
 
-          if (!isMatch) {
-            console.log("❌ Invalid password");
-            return null;
-          }
-
-          // console.log("✅ LOGIN SUCCESS");
-
+          console.log("✅ LOGIN SUCCESS");
           return {
             id: user._id.toString(),
             email: user.email,
