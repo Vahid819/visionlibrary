@@ -19,16 +19,7 @@ export default function Settingsclient({ session }) {
   // Fetch settings on mount
   // ======================
 
-  useEffect(async ()=>{
-      try {
-        const res = await fetch("/api/setting/get");
-        const data = await res.json();
-        console.log("Fetched settings:", data);
-        setData(data);
-      } catch (error) {
-        console.error("❌ Failed to fetch settings:", error);
-      }
-  }, []);
+  
 
   // ✅ FIXED default values
   const defaultForm = {
@@ -40,8 +31,8 @@ export default function Settingsclient({ session }) {
     enableUpi: false,
     qrImage: null,
 
-    rows: data.rows || 5,
-    cols: data.cols || 5,
+    rows: 5,
+    cols: 5,
 
     password: "",
   };
