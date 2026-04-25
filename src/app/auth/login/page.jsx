@@ -23,26 +23,25 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-    const res = await signIn("credentials", {
-      email: form.email,
-      password: form.password,
-      redirect: false,
-    });
+  const res = await signIn("credentials", {
+    email: form.email,
+    password: form.password,
+    redirect: false,
+  });
 
-    console.log("SignIn Response:", res);
+  // console.log("SignIn Response:", res);
+  setLoading(false);
 
-    setLoading(false);
-
-    if (res.error) {
-      setError(res.error);
-    } else {
-      router.push("/dashboard");
-    }
-  };
+  if (res?.error) {
+    setError("Invalid email or password");
+  } else if (res?.ok) {
+    window.location.href = "/dashboard"; // ← replace router.push with this
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#020617] flex items-center justify-center px-4 relative overflow-hidden">
