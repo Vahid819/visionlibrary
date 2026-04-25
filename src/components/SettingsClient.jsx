@@ -19,8 +19,7 @@ export default function Settingsclient({ session }) {
   // Fetch settings on mount
   // ======================
 
-  useEffect(()=>{
-    const fetchSettings = async ()=>{
+  useEffect(async ()=>{
       try {
         const res = await fetch("/api/setting/get");
         const data = await res.json();
@@ -28,7 +27,6 @@ export default function Settingsclient({ session }) {
       } catch (error) {
         console.error("❌ Failed to fetch settings:", error);
       }
-    }
   }, []);
 
   // ✅ FIXED default values
