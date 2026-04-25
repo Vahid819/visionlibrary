@@ -39,7 +39,8 @@ export default function LoginPage() {
   if (res?.error) {
     setError("Invalid email or password");
   } else if (res?.ok) {
-    window.location.href = "/dashboard"; // ← replace router.push with this
+    router.push("/dashboard"); // ← use router for client-side navigation
+    // window.location.href = "/dashboard"; // ← replace router.push with this
   }
 };
 
