@@ -18,13 +18,13 @@ export async function POST(req) {
     console.log("Received seatting data:", body);
     const { rows, cols } = body;
 
-    // 🔥 generate seats
-    const seats = Array.from({ length: rows }, (_, rowIndex) =>
-      Array.from({ length: cols }, (_, colIndex) => ({
-        seatNumber: `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`,
-        isAvailable: true,
-      }))
-    ).flat();
+    // // 🔥 generate seats
+    // const seats = Array.from({ length: rows }, (_, rowIndex) =>
+    //   Array.from({ length: cols }, (_, colIndex) => ({
+    //     seatNumber: `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`,
+    //     isAvailable: true,
+    //   }))
+    // ).flat();
 
     // ✅ UPSERT (update if exists, else create)
     const updatedSeatting = await Seat.findOneAndUpdate(
