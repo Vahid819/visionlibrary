@@ -18,8 +18,10 @@ export default function SeatPage() {
 
         const result = await res.json();
 
+        console.log("Fetched seatting data:", result.data);
         // ✅ store data properly
         setSeats(result.data || {});
+
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {

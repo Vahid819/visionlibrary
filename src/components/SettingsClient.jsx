@@ -13,15 +13,9 @@ import SecuritySettings from "@/components/dashboard/setting/SecuritySettings";
 export default function Settingsclient({ session }) {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState({});
+  const [seats, setSeats] = useState({});
 
-    // ====================== 
-  // Fetch settings on mount
-  // ======================
-
-  console.log("Initial seatting from server:", seatting);
-
-  // ✅ FIXED default values
+  // ✅ default form (STATIC only)
   const defaultForm = {
     name: session?.user?.name || "",
     email: session?.user?.email || "",
@@ -31,8 +25,8 @@ export default function Settingsclient({ session }) {
     enableUpi: false,
     qrImage: null,
 
-    rows: seatting?.row || 0,
-    cols: seatting?.column || 0,
+    rows: 0,
+    cols: 0,
 
     password: "",
   };
@@ -41,9 +35,54 @@ export default function Settingsclient({ session }) {
   const [tempForm, setTempForm] = useState(defaultForm);
 
   // ======================
+  // Fetch seating data
+  // ======================
+  useEffect(() => {
+    const fetchSeats = async () => {
+      setLoading(true);
+
+      try {
+        const res = await fetch("/api/setting/get", {
+          cache: "no-store",
+        });
+
+        const result = await res.json();
+
+        if (result?.data) {
+          setSeats(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSeats();
+  }, [session]);
+
+  // ======================
+  // Sync seats → form (IMPORTANT FIX)
+  // ======================
+  useEffect(() => {
+    if (seats && Object.keys(seats).length > 0) {
+      setForm((prev) => ({
+        ...prev,
+        rows: seats.row || 0,
+        cols: seats.column || 0,
+      }));
+
+      setTempForm((prev) => ({
+        ...prev,
+        rows: seats.row || 0,
+        cols: seats.column || 0,
+      }));
+    }
+  }, [seats]);
+
+  // ======================
   // Handlers
   // ======================
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTempForm((prev) => ({ ...prev, [name]: value }));
@@ -60,7 +99,6 @@ export default function Settingsclient({ session }) {
   // ======================
   // Edit Flow
   // ======================
-
   const handleEdit = () => {
     setTempForm(form);
     setIsEditing(true);
@@ -85,9 +123,8 @@ export default function Settingsclient({ session }) {
 
       if (!res.ok) throw new Error("Failed to save");
 
-      const result = await res.json();
+      await res.json();
 
-      // ✅ update saved data
       setForm(tempForm);
       setIsEditing(false);
 
@@ -102,7 +139,6 @@ export default function Settingsclient({ session }) {
   // ======================
   // UI
   // ======================
-
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       <h1 className="text-2xl font-semibold">Settings</h1>
