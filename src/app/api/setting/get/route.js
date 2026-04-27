@@ -2,54 +2,40 @@
 import { connectDB } from "@/lib/db";
 import Seat from "@/models/Seats";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET() {
+
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+    });
+  }
+  await connectDB();
+
   try {
-    await connectDB();
+    
+    const seatting = await Seat.findOne({ id: session.user.id });
 
-    const seats = await Seat.find().lean(); // ← lean() for better performance
-
-    if (!seats.length) {
-      return NextResponse.json(
-        { success: false, message: "No seats found" },
-        { status: 404 }
-      );
-    }
-
-    // Build seat object with numeric keys
-    const seatObject = {};
-    let counter = 1;
-
-    seats.forEach((doc) => {
-      doc.seat.forEach((seatItem) => {
-        seatObject[counter++] = {
-          _id: seatItem._id,
-          isOccupied: !seatItem.isAvailable,
-          row: doc.row,
-          column: doc.column,
-          parentId: doc._id,
-        };
+    if (!seatting) {
+      return new Response(JSON.stringify({ error: "Seatting not found" }), {
+        status: 404,
       });
-    });
-
-    return NextResponse.json({
-      success: true,
-      total: Object.keys(seatObject).length, // ← useful for frontend
-      data: seatObject,
-    });
+    }
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: seatting,
+      }),
+      { status: 200 }
+    );
 
   } catch (error) {
-    console.error("❌ Seats GET error:", error.message);
-
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to fetch seats",
-        error: process.env.NODE_ENV === "development" 
-          ? error.message  // show error in dev only
-          : undefined,     // hide error in production
-      },
-      { status: 500 }
-    );
+    console.error("Error fetching seatting:", error);
+    return new Response(JSON.stringify({ error: "Failed to fetch seatting" }), {
+      status: 500,
+    });
   }
 }

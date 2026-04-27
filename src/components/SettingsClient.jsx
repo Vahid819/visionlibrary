@@ -19,7 +19,7 @@ export default function Settingsclient({ session }) {
   // Fetch settings on mount
   // ======================
 
-  
+  console.log("Initial seatting from server:", seatting);
 
   // ✅ FIXED default values
   const defaultForm = {
@@ -31,8 +31,8 @@ export default function Settingsclient({ session }) {
     enableUpi: false,
     qrImage: null,
 
-    rows: 5,
-    cols: 5,
+    rows: seatting?.row || 0,
+    cols: seatting?.column || 0,
 
     password: "",
   };

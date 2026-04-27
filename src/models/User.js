@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema(
             required: [true, "please enter your password"],
             match: [passwordRegex, "Password must contain uppercase, lowercase, number and be at least 8 characters"]
         },
+        phone:{
+            type: String,
+            trim: true,
+            unique: true,
+        },
         otp:{
             type: Number,
         },

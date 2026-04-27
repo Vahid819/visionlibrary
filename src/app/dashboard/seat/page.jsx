@@ -30,6 +30,8 @@ export default function SeatPage() {
     fetchSeats();
   }, []);
 
+  // console.log("Fetched seatting data:", seats);
+
   if (loading) {
     return <p className="text-center">Loading seats...</p>;
   }

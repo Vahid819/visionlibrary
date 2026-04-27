@@ -7,14 +7,18 @@ import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeProvider } from "next-themes";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export default function DashboardLayout({ children }) {
+export default async function DashboardLayout({ children }) {
+  const session = await getServerSession(authOptions);
+
   return (
     <TooltipProvider>
       {" "}
       {/* ✅ FIX */}
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar session={session} />
         <SidebarInset>
           <main className="p-2 bg-blend-darken">
             {/* 🔹 MAIN CONTENT */}

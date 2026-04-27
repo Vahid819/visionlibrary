@@ -5,6 +5,7 @@ import clsx from "clsx";
 
 export function SeatItem({
   seatId,
+  seatNumber,
   isPending,
   isSelected,
   onClick,
@@ -63,7 +64,7 @@ export function SeatItem({
       />
 
       {/* Seat Number */}
-      <span className="tracking-tight">{seatId}</span>
+      <span className="tracking-tight">{seatNumber}</span>
 
       {/* 🔥 Glow effect */}
       {isSelected && (

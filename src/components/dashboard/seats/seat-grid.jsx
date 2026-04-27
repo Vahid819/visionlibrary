@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { SeatItem } from "./seat-item";
 
-// 🔥 animation variants
 const containerVariants = {
   hidden: {},
   visible: {
@@ -22,20 +21,22 @@ const itemVariants = {
 export function SeatGrid({ seats }) {
   const [selected, setSelected] = useState([]);
 
-  const seatKeys = Object.keys(seats || {});
+  // console.log("Received seats prop:", seats);
 
-  const toggleSeat = (seatKey) => {
-    // 🚫 prevent selecting occupied seats
-    if (seats[seatKey]?.isOccupied) return;
+  // ✅ use array directly
+  const seatList = seats?.seat || [];
+
+  const toggleSeat = (index) => {
+    if (seatList[index]?.isOccupied) return;
 
     setSelected((prev) =>
-      prev.includes(seatKey)
-        ? prev.filter((s) => s !== seatKey)
-        : [...prev, seatKey]
+      prev.includes(index)
+        ? prev.filter((s) => s !== index)
+        : [...prev, index]
     );
   };
 
-  if (!seatKeys.length) {
+  if (!seatList.length) {
     return <p className="text-center text-muted-foreground">No seats found</p>;
   }
 
@@ -46,20 +47,17 @@ export function SeatGrid({ seats }) {
       initial="hidden"
       animate="visible"
     >
-      {seatKeys.map((seatKey) => {
-        const seat = seats[seatKey];
-
-        return (
-          <motion.div key={seatKey} variants={itemVariants}>
-            <SeatItem
-              seatId={seatKey}
-              isPending={seat?.isOccupied} // 🔥 from DB
-              isSelected={selected.includes(seatKey)}
-              onClick={() => toggleSeat(seatKey)}
-            />
-          </motion.div>
-        );
-      })}
+      {seatList.map((seat, index) => (
+        <motion.div key={index} variants={itemVariants}>
+          <SeatItem
+            seatId={index}
+            seatNumber={seat.seatNumber || index + 1} // ✅ FIXED
+            isPending={seat?.isOccupied}
+            isSelected={selected.includes(index)}
+            onClick={() => toggleSeat(index)}
+          />
+        </motion.div>
+      ))}
     </motion.div>
   );
 }

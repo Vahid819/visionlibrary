@@ -19,21 +19,22 @@ const itemVariants = {
 export function SeatGrid({ seats }) {
   const [selected, setSelected] = useState([]);
 
-  const seatKeys = Object.keys(seats || {});
+  const seatList = seats?.seat || []
 
-  const toggleSeat = (seatKey) => {
-    const seat = seats[seatKey];
+  const toggleSeat = (index) => {
+    const seat = seatList[index];
 
     // 🚫 block if occupied
     if (seat?.isOccupied) return;
 
     setSelected((prev) =>
-      prev.includes(seatKey)
-        ? prev.filter((s) => s !== seatKey)
-        : [...prev, seatKey]
+      prev.includes(index)
+        ? prev.filter((s) => s !== index)
+        : [...prev, index]
     );
   };
 
+  // // console.log("Rendering SeatGrid with seats:", seats.seatNumber);
   return (
     <motion.div
       className="grid grid-cols-8 gap-2"
@@ -41,16 +42,15 @@ export function SeatGrid({ seats }) {
       initial="hidden"
       animate="visible"
     >
-      {seatKeys.map((seatKey) => {
-        const seat = seats[seatKey];
-
+      {seatList.map((seat, index) => {
         return (
-          <motion.div key={seatKey} variants={itemVariants}>
+          <motion.div key={index} variants={itemVariants}>
             <SeatItem
-              seatId={seatKey}
+              seatId={index}
+              seatNumber={seat?.seatNumber || index + 1}
               isOccupied={seat?.isOccupied} // ✅ PASS THIS
-              isSelected={selected.includes(seatKey)}
-              onClick={() => toggleSeat(seatKey)}
+              isSelected={selected.includes(index)}
+              onClick={() => toggleSeat(index)}
             />
           </motion.div>
         );

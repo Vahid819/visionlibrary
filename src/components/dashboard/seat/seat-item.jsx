@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export function SeatItem({ seatId, isOccupied, isSelected, onClick }) {
+export function SeatItem({ seatId, seatNumber, isOccupied, isSelected, onClick }) {
   const isDisabled = isOccupied; // 🔥 occupied = disabled
 
   return (
@@ -42,7 +42,7 @@ export function SeatItem({ seatId, isOccupied, isSelected, onClick }) {
         <span className="absolute inset-0 rounded-lg bg-primary/20 blur-md -z-10" />
       )}
 
-      {seatId}
+      {seatNumber}
     </motion.button>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
+import { useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -25,6 +25,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "./ui/separator";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -40,7 +41,8 @@ import {
 } from "lucide-react";
 import LogoutButton from "./LogoutButton";
 
-export function AppSidebar() {
+export function AppSidebar({session}) {;
+
   return (
     <Sidebar
       variant="floating"
@@ -166,6 +168,17 @@ export function AppSidebar() {
                 </span>
               </SidebarMenuButton>
             </Link>
+            <Link href="/dashboard/settings" className="cursor-pointer">
+              <SidebarMenuButton
+                tooltip="Settings"
+                className="flex items-center w-full h-12 mx-auto group-data-[collapsible=icon]:justify-center gap-4 px-3 py-2 text-sm rounded-md cursor-pointer hover:bg-white/10"
+              >
+                <Settings size={18} className="opacity-70" />
+                <span className="group-data-[collapsible=icon]:hidden">
+                  Settings
+                </span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
@@ -188,11 +201,14 @@ export function AppSidebar() {
             "
                 >
                   {/* Icon */}
-                  <CircleEllipsis size={18} />
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
                   {/* Text */}
                   <div className="flex flex-col text-left group-data-[collapsible=icon]:hidden">
                     <span className="text-sm font-medium leading-none">
-                      Account
+                      {session?.user?.name || "User"}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       advanced settings
@@ -226,18 +242,6 @@ export function AppSidebar() {
                 {/* Divider */}
                 <div className="h-px bg-border" />
 
-                {/* Settings */}
-                <Link
-                  href="/dashboard/settings"
-                  className="
-              flex items-center gap-2 px-2 py-2 rounded-md text-sm
-              hover:bg-muted transition-colors
-            "
-                >
-                  <Settings size={18} className="opacity-70" />
-                  Settings
-                </Link>
-
                 {/* Theme */}
                 <div>
                   <p className="text-xs text-muted-foreground mb-2 px-1">
@@ -248,7 +252,6 @@ export function AppSidebar() {
                 {/* LogoutButton */}
                 <Separator className="my-1" />
                 <LogoutButton />
-
               </PopoverContent>
             </Popover>
           </SidebarMenuItem>
