@@ -111,8 +111,10 @@ export default function Settingsclient({ session }) {
 
   const handleSave = async () => {
     setLoading(true);
-
+    console.log("hello world")
+    if(tempForm.rows <= 0 || tempForm.cols <= 0){
     try {
+      console.log("data fet")
       const res = await fetch("/api/setting", {
         method: "POST",
         headers: {
@@ -133,6 +135,24 @@ export default function Settingsclient({ session }) {
       toast.error(error.message || "Failed to save settings");
     } finally {
       setLoading(false);
+    }
+    } else if(tempForm.password){
+      try {
+        const res = await fetch("/api/signup",{
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(tempForm),
+        })
+      } catch (error) {
+        toast.error(error.message || "Failed to save settings");
+      }
+      await res.json();
+      setForm(tempForm);
+      setIsEditing(false);
+
+      toast.success("Settings saved successfully!");
     }
   };
 

@@ -21,6 +21,15 @@ export async function POST(req){
         await sendOTPEmail(body.email, otp)
         const hashedPassword = await hash(body.password, 10);
 
+          if(existingUser.password){
+            await findOneAndUpdate({email: body.email}, {password: hashedPassword})
+            return new Response(JSON.stringify({ message: "Password updated successfully" }), { status: 200 });
+        }else if(existingUser.email){
+            await findOneAndUpdate
+            return new Response(JSON.stringify({ message: "OTP sent to email" }), { status: 200 });
+
+        }
+
         const newUser = new UserModel({
             firstname: body.firstName,
             lastname: body.lastName,
