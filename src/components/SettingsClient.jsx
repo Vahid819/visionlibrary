@@ -112,7 +112,7 @@ export default function Settingsclient({ session }) {
   const handleSave = async () => {
     setLoading(true);
     console.log("hello world")
-    if(tempForm.rows <= 0 || tempForm.cols <= 0){
+    if(tempForm.rows > 0 && tempForm.cols > 0){
     try {
       console.log("data fet")
       const res = await fetch("/api/setting", {
