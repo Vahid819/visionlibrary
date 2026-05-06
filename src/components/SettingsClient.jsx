@@ -111,7 +111,7 @@ export default function Settingsclient({ session }) {
 
   const handleSave = async () => {
     setLoading(true);
-    console.log("hello world")
+    // console.log("hello world")
     if(tempForm.rows > 0 && tempForm.cols > 0){
     try {
       console.log("data fet")
@@ -128,6 +128,7 @@ export default function Settingsclient({ session }) {
       await res.json();
 
       setForm(tempForm);
+      
       setIsEditing(false);
 
       toast.success("Settings saved successfully!");

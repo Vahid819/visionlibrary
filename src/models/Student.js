@@ -1,65 +1,48 @@
 import mongoose from "mongoose";
-import { min } from "three/src/nodes/math/MathNode.js";
 
-const studentSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    phone: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true,
-        match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    },
-    course: {
-        type: String,
-        required: true,
-    },
-    education: {
-        type: String,
-        required: true,
-    },
-    batch: {
-        type: Date,
-        required: true,
-        validate: {
-            validator: function(value) {
-                return value >= new Date();
-            },
-            message: "Batch date must be in the future",
-        },
-    },
-    Gender: {
-        type: String,
-        required: true,
-        enum: ["Male", "Female", "Other"],
-    },
-    status: {
-        type: String,
-        required: true,
-        enum: ["active", "inactive"],
-        default: "active",
-    },
-    registrationDate: {
-        type: Date,
-        default: Date.now,
-    },
-    paymentStatus: {
-        type: String,
-        required: true,
-        enum: ["paid", "unpaid"],
-        default: "unpaid",
-    },
+const StudentSchema = new mongoose.Schema(
+  {
+    // Personal Info
+    firstName:      { type: String, required: true, trim: true },
+    lastName:       { type: String, required: true, trim: true },
+    phone:          { type: String, required: true, trim: true },
+    email:          { type: String, trim: true, lowercase: true },
+    dob:            { type: String },
+    gender:         { type: String, enum: ["Male", "Female", "Other", "Prefer not to say", ""] },
+    address:        { type: String },
+    emergencyName:  { type: String },
+    emergencyPhone: { type: String },
+    photo:          { type: String }, // URL or base64
 
-})
+    // Seat & Membership
+    seat:           { type: Number, required: true },
+    plan:           { type: String, enum: ["Weekly", "Monthly", "Yearly"], required: true },
+    joinDate:       { type: String, required: true },
+    expiryDate:     { type: String },
+    paymentStatus:  { type: String, enum: ["Paid", "Pending", "Failed"], default: "Pending" },
+    shift:          { type: String },
+    idType:         { type: String },
+    idNumber:       { type: String },
+    notes:          { type: String },
 
-const StudentModel = mongoose.models.Student || mongoose.model("Student", studentSchema);
+    // Meta
+    isActive:       { type: Boolean, default: true },
+    createdBy:      { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  },
+  { timestamps: true }
+);
 
-export default StudentModel;
+// Auto-calculate expiry date based on plan
+StudentSchema.pre("save", function (next) {
+  if (this.joinDate && this.plan) {
+    const join = new Date(this.joinDate);
+    if (this.plan === "Weekly")  join.setDate(join.getDate() + 7);
+    if (this.plan === "Monthly") join.setMonth(join.getMonth() + 1);
+    if (this.plan === "Yearly")  join.setFullYear(join.getFullYear() + 1);
+    this.expiryDate = join.toISOString().split("T")[0];
+  }
+  next();
+});
+
+export default mongoose.models.Student ||
+  mongoose.model("Student", StudentSchema);

@@ -19,15 +19,17 @@ export function StatsSection() {
         const res = await fetch("/api/setting/get", {
           cache: "no-store",
         });
-
         const text = await res.text();
         const result = text ? JSON.parse(text) : {};
-
+        
         const seats = result?.data || {};
-
+        // console.log(seats)
         // 🔥 calculations
-        const total = Object.keys(seats).length;
+        const total = seats.column * seats.row
 
+        const dated = Object.keys(seats.seat);
+        console.log("date", dated)
+        
         const occupied = Object.values(seats).filter(
           (seat) => seat.isOccupied
         ).length;
