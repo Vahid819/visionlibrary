@@ -217,6 +217,7 @@ export default function AddStudentForm() {
                   form={form}
                   errors={errors}
                   onChange={handleChange}
+
                 />
               )}
               {step === 3 && <Step3Review form={form} />}

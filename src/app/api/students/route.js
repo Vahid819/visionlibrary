@@ -7,54 +7,159 @@ import { NextResponse } from "next/server";
 // GET — fetch all students
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   await connectDB();
 
   try {
-    const students = await StudentModel.find().sort({ createdAt: -1 }).lean();
-    return NextResponse.json({ success: true, data: students });
+    const students = await StudentModel
+      .find({ createdBy: session.user.id }) // ✅ only fetch this user's students
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return NextResponse.json({
+      success: true,
+      data: students,
+      total: students.length,
+    });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Student GET error:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to fetch students" },
+      { status: 500 }
+    );
   }
 }
 
 // POST — create a new student
 export async function POST(req) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   await connectDB();
 
   try {
     const body = await req.json();
 
-    // Check if seat already taken
-    const seatTaken = await StudentModel.findOne({
-      seat: body.seat,
-      isActive: true,
-    });
-
-    if (seatTaken) {
+    // ✅ Validate required fields
+    if (!body.firstName || !body.lastName || !body.phone) {
       return NextResponse.json(
-        { message: `Seat ${body.seat} is already occupied` },
+        { message: "First name, last name and phone are required" },
         { status: 400 }
       );
     }
 
-    const student = await StudentModel.create({
-      ...body,
+    if (!body.seat) {
+      return NextResponse.json(
+        { message: "Please select a seat" },
+        { status: 400 }
+      );
+    }
+
+    if (!body.plan) {
+      return NextResponse.json(
+        { message: "Please select a membership plan" },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Check if seat already taken by this user's active students
+    const seatTaken = await StudentModel.findOne({
+      seat: body.seat,
+      isActive: true,
       createdBy: session.user.id,
+    });
+
+    if (seatTaken) {
+      return NextResponse.json(
+        { message: `Seat ${body.seat} is already occupied by ${seatTaken.firstName} ${seatTaken.lastName}` },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Create student — pre save hook will auto-calculate expiryDate
+    const student = await StudentModel.create({
+      firstName:      body.firstName,
+      lastName:       body.lastName,
+      phone:          body.phone,
+      email:          body.email      || "",
+      dob:            body.dob        || "",
+      gender:         body.gender     || "",
+      address:        body.address    || "",
+      emergencyName:  body.emergencyName  || "",
+      emergencyPhone: body.emergencyPhone || "",
+      seat:           Number(body.seat),
+      plan:           body.plan,
+      joinDate:       body.joinDate,
+      paymentStatus:  body.paymentStatus || "Pending",
+      shift:          body.shift      || "",
+      idType:         body.idType     || "",
+      idNumber:       body.idNumber   || "",
+      notes:          body.notes      || "",
+      isActive:       true,
+      createdBy:      session.user.id,
     });
 
     return NextResponse.json(
       { success: true, data: student },
       { status: 201 }
     );
+
   } catch (error) {
     console.error("Student POST error:", error);
+
+    // ✅ Handle mongoose validation errors clearly
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map(e => e.message);
+      return NextResponse.json(
+        { message: messages.join(", ") },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
       { message: error.message || "Failed to register student" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE — deactivate a student
+export async function DELETE(req) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  await connectDB();
+
+  try {
+    const { searchParams } = new URL(req.url);
+    const studentId = searchParams.get("id");
+
+    if (!studentId) {
+      return NextResponse.json({ message: "Student ID required" }, { status: 400 });
+    }
+
+    const student = await StudentModel.findOneAndUpdate(
+      { _id: studentId, createdBy: session.user.id },
+      { isActive: false },
+      { new: true }
+    );
+
+    if (!student) {
+      return NextResponse.json({ message: "Student not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, message: "Student deactivated" });
+
+  } catch (error) {
+    return NextResponse.json(
+      { message: error.message || "Failed to delete student" },
       { status: 500 }
     );
   }
