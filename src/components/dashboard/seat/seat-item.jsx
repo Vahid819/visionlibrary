@@ -30,7 +30,7 @@ export function SeatItem({ seatId, seatNumber, isOccupied, isSelected, onClick }
 
         ${
           isDisabled
-            ? "bg-red-400 text-white cursor-not-allowed opacity-60"
+            ? "bg-zinc-800 text-white cursor-not-allowed border opacity-60"
             : isSelected
             ? "bg-primary text-primary-foreground shadow-lg"
             : "bg-background border border-border hover:bg-muted/40"

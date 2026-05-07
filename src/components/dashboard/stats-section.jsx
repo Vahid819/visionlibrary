@@ -28,7 +28,7 @@ export function StatsSection() {
         const total = seats.column * seats.row
 
         const dated = Object.keys(seats.seat);
-        console.log("date", dated)
+        // console.log("date", dated)
         
         const occupied = Object.values(seats).filter(
           (seat) => seat.isOccupied

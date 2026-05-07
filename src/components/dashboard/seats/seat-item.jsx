@@ -6,79 +6,121 @@ import clsx from "clsx";
 export function SeatItem({
   seatId,
   seatNumber,
-  isPending,
+  isAvailable,
   isSelected,
   onClick,
   userName,
 }) {
-  const isAvailable = !isPending;
+  // ✅ Clickable only when NOT available
+  const isClickable = !isAvailable;
 
   return (
     <motion.button
       onClick={onClick}
-      disabled={!isAvailable}
+      disabled={!isClickable}
       layout
       whileHover={
-        isAvailable ? { scale: 1.08, y: -3 } : {}
+        isClickable
+          ? { scale: 1.08, y: -3 }
+          : {}
       }
       whileTap={
-        isAvailable ? { scale: 0.95 } : {}
+        isClickable
+          ? { scale: 0.95 }
+          : {}
       }
       animate={
         isSelected
           ? {
-              scale: [1, 1.06, 1],
-              transition: { duration: 0.25 },
+              scale: [1, 1.08, 1],
             }
           : {}
       }
+      transition={{
+        duration: 0.3,
+      }}
       className={clsx(
-        "group relative w-11 h-11 rounded-xl text-xs font-semibold",
+        "group relative overflow-hidden",
+        "w-11 h-11 rounded-xl",
         "flex items-center justify-center",
-        "transition-all duration-200 border backdrop-blur-sm",
+        "text-xs font-semibold",
+        "border transition-all duration-300",
 
-        // ❌ PENDING
-        isPending &&
-          "bg-muted text-muted-foreground border-border cursor-not-allowed opacity-70",
-
-        // ✅ SELECTED
-        isSelected &&
-          "bg-primary text-primary-foreground border-primary shadow-lg ring-2 ring-primary/30",
-
-        // ✅ AVAILABLE
+        // ❌ Blocked (Available)
         isAvailable &&
+          "bg-muted text-muted-foreground border-border opacity-60 cursor-not-allowed",
+
+        // ✅ Selected
+        isSelected &&
+          "bg-white text-black border-white shadow-2xl ring-2 ring-white/40",
+
+        // ✅ Clickable (Not Available)
+        isClickable &&
           !isSelected &&
-          "bg-background text-foreground border-border hover:bg-muted hover:shadow-md"
+          "bg-background text-foreground border-border hover:bg-muted hover:shadow-md cursor-pointer"
       )}
       aria-pressed={isSelected}
-      aria-disabled={isPending}
+      aria-disabled={!isClickable}
     >
+      {/* ✨ Glow Animation */}
+      {isSelected && (
+        <motion.span
+          layoutId={`seat-glow-${seatId}`}
+          initial={{
+            opacity: 0,
+            scale: 0.6,
+          }}
+          animate={{
+            opacity: [0.4, 1, 0.7],
+            scale: [1, 1.35, 1.1],
+          }}
+          exit={{
+            opacity: 0,
+            scale: 0.6,
+          }}
+          transition={{
+            duration: 0.5,
+            ease: "easeOut",
+          }}
+          className="
+            absolute inset-0
+            rounded-xl
+            bg-white/50
+            blur-2xl
+            z-0
+          "
+        />
+      )}
+
       {/* 🔵 Status Dot */}
       <span
         className={clsx(
-          "absolute top-1 right-1 w-2 h-2 rounded-full",
-          isPending
-            ? "bg-destructive"
-            : "bg-green-500 dark:bg-green-400"
+          "absolute top-1 right-1 w-2 h-2 rounded-full z-20",
+          isClickable
+            ? "bg-red-500"
+            : "bg-green-500"
         )}
       />
 
       {/* Seat Number */}
-      <span className="tracking-tight">{seatNumber}</span>
+      <span className="relative z-10 tracking-tight">
+        {seatNumber}
+      </span>
 
-      {/* 🔥 Glow effect */}
-      {isSelected && (
-        <motion.span
-          layoutId="seat-glow"
-          className="absolute inset-0 rounded-xl bg-primary/20 blur-md -z-10"
-        />
-      )}
-
-      {/* 🧠 Tooltip */}
+      {/* Tooltip */}
       {userName && (
-        <div className="absolute -top-8 hidden group-hover:block z-10">
-          <div className="text-[10px] px-2 py-1 rounded-md shadow-md
-            bg-popover text-popover-foreground border border-border">
+        <div className="absolute -top-8 hidden group-hover:block z-30">
+          <div
+            className="
+              text-[10px]
+              px-2 py-1
+              rounded-md
+              shadow-md
+              bg-popover
+              text-popover-foreground
+              border border-border
+            "
+          >
             {userName}
           </div>
         </div>

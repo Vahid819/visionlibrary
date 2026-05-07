@@ -6,7 +6,7 @@ import { SeatItem } from "./seat-item";
 
 const containerVariants = {
   hidden: {},
-  visible: {
+ visible: {
     transition: { staggerChildren: 0.03 },
   },
 };
@@ -19,13 +19,16 @@ const itemVariants = {
 export function SeatGrid({ seats }) {
   const [selected, setSelected] = useState([]);
 
-  const seatList = seats?.seat || []
+  const seatList = seats?.seat || [];
 
   const toggleSeat = (index) => {
     const seat = seatList[index];
 
-    // 🚫 block if occupied
-    if (seat?.isOccupied) return;
+    const isBlocked =
+      seat?.isOccupied || seat?.isAvailable === false;
+
+    // 🚫 Stop selection if blocked
+    if (isBlocked) return;
 
     setSelected((prev) =>
       prev.includes(index)
@@ -34,7 +37,6 @@ export function SeatGrid({ seats }) {
     );
   };
 
-  // // console.log("Rendering SeatGrid with seats:", seats.seatNumber);
   return (
     <motion.div
       className="grid grid-cols-8 gap-2"
@@ -43,12 +45,19 @@ export function SeatGrid({ seats }) {
       animate="visible"
     >
       {seatList.map((seat, index) => {
+        const isBlocked =
+          seat?.isOccupied || seat?.isAvailable === false;
+
         return (
-          <motion.div key={index} variants={itemVariants}>
+          <motion.div
+            key={index}
+            variants={itemVariants}
+            className={isBlocked ? "cursor-not-allowed" : "cursor-pointer"}
+          >
             <SeatItem
               seatId={index}
               seatNumber={seat?.seatNumber || index + 1}
-              isOccupied={seat?.isOccupied} // ✅ PASS THIS
+              isOccupied={isBlocked}
               isSelected={selected.includes(index)}
               onClick={() => toggleSeat(index)}
             />

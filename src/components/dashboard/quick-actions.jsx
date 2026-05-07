@@ -19,7 +19,7 @@ import {
 const actions = [
   {
     label: "Add Booking",
-    href: "/dashboard/settings",
+    href: "/dashboard/student",
     icon: PlusCircle,
     desc: "Create a new booking",
   },
