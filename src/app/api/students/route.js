@@ -3,6 +3,7 @@ import StudentModel from "@/models/Student";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
+import Seat from "@/models/Seats"; // ✅ Imported Seat model
 
 // GET — fetch all students
 export async function GET() {
@@ -15,7 +16,7 @@ export async function GET() {
 
   try {
     const students = await StudentModel
-      .find({ createdBy: session.user.id }) // ✅ only fetch this user's students
+      .find({ createdBy: session.user.id }) 
       .sort({ createdAt: -1 })
       .lean();
 
@@ -67,21 +68,24 @@ export async function POST(req) {
       );
     }
 
-    // ✅ Check if seat already taken by this user's active students
-    const seatTaken = await StudentModel.findOne({
-      seat: body.seat,
-      isActive: true,
-      createdBy: session.user.id,
+    // 🔥 NEW LOGIC: Verify seat availability directly from the Seat model first
+    const seatAvailable = await Seat.findOne({
+      "seat": {
+        $elemMatch: {
+          seatNumber: String(body.seat),
+          isAvailable: true
+        }
+      }
     });
 
-    if (seatTaken) {
+    if (!seatAvailable) {
       return NextResponse.json(
-        { message: `Seat ${body.seat} is already occupied by ${seatTaken.firstName} ${seatTaken.lastName}` },
+        { message: `Seat ${body.seat} is either already occupied or does not exist.` },
         { status: 400 }
       );
     }
 
-    // ✅ Create student — pre save hook will auto-calculate expiryDate
+    // ✅ Create student 
     const student = await StudentModel.create({
       firstName:      body.firstName,
       lastName:       body.lastName,
@@ -103,6 +107,14 @@ export async function POST(req) {
       isActive:       true,
       createdBy:      session.user.id,
     });
+
+    // 🔥 NEW FEATURE: Since the seat is confirmed available, update it to false
+    await Seat.updateOne(
+      // Find the document containing this specific seatNumber
+      { "seat.seatNumber": String(body.seat) }, 
+      // Use the positional operator ($) to update only that specific seat's availability in the array
+      { $set: { "seat.$.isAvailable": false } }
+    );
 
     return NextResponse.json(
       { success: true, data: student },
@@ -155,7 +167,15 @@ export async function DELETE(req) {
       return NextResponse.json({ message: "Student not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, message: "Student deactivated" });
+    // 🔥 NEW FEATURE: Free up the seat in the Seat model (isAvailable: true)
+    if (student.seat) {
+      await Seat.updateOne(
+        { "seat.seatNumber": String(student.seat) },
+        { $set: { "seat.$.isAvailable": true } }
+      );
+    }
+
+    return NextResponse.json({ success: true, message: "Student deactivated and seat freed" });
 
   } catch (error) {
     return NextResponse.json(
