@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { StatCard } from "./stat-card";
+import { StatCard } from "./stat-card"; // Make sure this path is correct
 import { Users, Armchair, CheckCircle, Wallet } from "lucide-react";
 
 export function StatsSection() {
@@ -23,28 +23,30 @@ export function StatsSection() {
         const result = text ? JSON.parse(text) : {};
         
         const seats = result?.data || {};
-        // console.log(seats)
-        // 🔥 calculations
-        const total = seats.column * seats.row
+        const seatData = seats.seat || {};
 
-        const dated = Object.keys(seats.seat);
-        // console.log("date", dated)
-        
-        const occupied = Object.values(seats).filter(
-          (seat) => seat.isOccupied
+        // 🔥 FIX 1: Force row and column to be Numbers so multiplication never fails
+        const totalRows = Number(seats.row) || 0;
+        const totalCols = Number(seats.column) || 0;
+        const total = totalRows * totalCols;
+
+        // 🔥 FIX 2: Check for both boolean (false) and string ("false")
+        const occupied = Object.values(seatData).filter(
+          (seat) => seat.isAvailable === false || seat.isAvailable === "false" || seat.isAvailable === 0
         ).length;
 
-        const available = total - occupied;
+        // 🔥 FIX 3: Prevent 'Available' from ever going into negative numbers
+        const available = Math.max(0, total - occupied);
 
-        // 💰 example revenue logic (₹50 per occupied seat)
+        // 💰 Revenue logic (₹500 per occupied seat)
         const revenue = occupied * 500;
 
-        // ✅ update state
+        // ✅ Update state
         setStats([
-          { title: "Total Seats", value: total, icon: Users },
-          { title: "Occupied", value: occupied, icon: Armchair },
-          { title: "Available", value: available, icon: CheckCircle },
-          { title: "Revenue", value: `₹${revenue}`, icon: Wallet },
+          { title: "Total Seats", value: total.toString(), icon: Users },
+          { title: "Occupied", value: occupied.toString(), icon: Armchair },
+          { title: "Available", value: available.toString(), icon: CheckCircle },
+          { title: "Revenue", value: `₹${revenue.toLocaleString('en-IN')}`, icon: Wallet },
         ]);
       } catch (error) {
         console.error("Error fetching stats:", error);
