@@ -1,51 +1,45 @@
-import { columns } from "@/components/messages/columns";
-import { DataTable } from "@/components/messages/data-table";
-import Message from "@/components/messages/messages";
+import { connectDB } from "@/lib/db";
+import StudentModel from "@/models/Student";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import MessageClientWrapper from "./MessageClientWrapper";
 
-async function getData() {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 300,
-      status: "pending",
-      email: "vahid@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 500,
-      status: "pending",
-      email: "john@example.com",
-    },
-    // ...
-  ];
+async function getStudents() {
+  const session = await getServerSession(authOptions);
+  if (!session) return [];
+
+  await connectDB();
+
+  // Fetch active students belonging to this user
+  const students = await StudentModel.find({ 
+    createdBy: session.user.id,
+    isActive: true 
+  }).lean();
+
+  // Format the data for your DataTable
+  return students.map((student) => ({
+    id: student._id.toString(),
+    name: `${student.firstName} ${student.lastName}`,
+    phone: student.phone,
+    email: student.email,
+    plan: student.plan,
+  }));
 }
 
 export default async function DemoPage() {
-  const data = await getData();
+  const data = await getStudents();
 
   return (
     <div className="container flex flex-wrap mx-auto py-10">
       <div className="mb-4 w-full">
         <h1 className="text-2xl font-bold">Messages</h1>
         <p className="text-muted-foreground">
-          A list of all the messages in your account.
+          Select a student from the list to send them a WhatsApp message.
         </p>
       </div>
-      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        <div className="rounded-md border w-full px-2 py-4 h-auto">
-          <DataTable columns={columns} data={data} />
-        </div>
-        <div>
-          <Message />
-        </div>
-      </div>
+      
+      {/* Pass the data to our Client Wrapper */}
+      <MessageClientWrapper data={data} />
     </div>
   );
 }

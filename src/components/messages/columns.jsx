@@ -1,56 +1,39 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
 
-
-export const columns = [
-    {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+export const columns = (setSelectedStudent) => [
+  {
+    accessorKey: "name",
+    header: "Name",
   },
-    
-   {
-    accessorKey: "status",
-    header: "Status",
+  {
+    accessorKey: "phone",
+    header: "Phone",
   },
-
+  // 👇 Add this email column definition back in
   {
     accessorKey: "email",
-    header: "Email"
+    header: "Email",
   },
-
   {
-    accessorKey: "amount",
-    header: () => <div>Amount</div>,
+    accessorKey: "plan",
+    header: "Plan",
+  },
+  {
+    id: "actions",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
- 
-      return <div>{formatted}</div>
+      const student = row.original;
+
+      return (
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => setSelectedStudent(student)}
+        >
+          Select for Message
+        </Button>
+      );
     },
   },
-]
+];

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { SeatItem } from "./seat-item";
+import { SeatItem } from "./seat-item"; // Ensure path is correct
 
 const containerVariants = {
   hidden: {},
@@ -21,13 +21,41 @@ const itemVariants = {
 export function SeatGrid({ seats }) {
   const [selected, setSelected] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  
+  // 🔥 NEW: State to store student data mapped by their seat number
+  const [studentMap, setStudentMap] = useState({});
 
-  // Seats array
   const seatList = seats?.seat || [];
+
+  // 🔥 NEW: Fetch all students when the component loads
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        // Adjust this URL to wherever your Student GET route is located
+        const res = await fetch("/api/students"); 
+        const result = await res.json();
+
+        if (result.success && result.data) {
+          // Create a dictionary/map for instant lookup: { "12": { studentData }, "15": { studentData } }
+          const map = {};
+          result.data.forEach((student) => {
+            if (student.seat && student.isActive) {
+              map[student.seat] = student;
+            }
+          });
+          setStudentMap(map);
+        }
+      } catch (error) {
+        console.error("Failed to fetch students:", error);
+      }
+    };
+
+    fetchStudents();
+  }, []);
 
   // Handle seat click
   const toggleSeat = (seat) => {
-    // ❌ Block available seats
+    // ❌ Block clicking available seats (we only want to see details for occupied ones)
     if (seat?.isAvailable) return;
 
     // Toggle selected UI
@@ -90,85 +118,59 @@ export function SeatGrid({ seats }) {
       {/* Selected Seat Details */}
       {selectedSeats.length > 0 && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {selectedSeats.map((seat, index) => (
-            <motion.div
-              key={seat.seatNumber}
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.3,
-                delay: index * 0.1,
-              }}
-              className="
-                rounded-2xl
-                border
-                bg-card
-                p-5
-                shadow-lg
-              "
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">
-                  Seat {seat?.seatNumber}
-                </h2>
+          {selectedSeats.map((seat, index) => {
+            // 🔥 NEW: Look up the student data for this specific seat
+            const student = studentMap[seat.seatNumber];
 
-                <span
-                  className="
-                    text-xs
-                    px-2 py-1
-                    rounded-full
-                    bg-red-500/10
-                    text-red-500
-                  "
-                >
-                  Occupied
-                </span>
-              </div>
+            return (
+              <motion.div
+                key={seat.seatNumber}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                className="rounded-2xl border bg-card p-5 shadow-lg"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold">
+                    Seat {seat?.seatNumber}
+                  </h2>
 
-              <div className="space-y-2 text-sm">
-                <p>
-                  <span className="font-medium">
-                    Student Name:
-                  </span>{" "}
-                  {seat?.studentName || "N/A"}
-                </p>
+                  <span className="text-xs px-2 py-1 rounded-full bg-red-500/10 text-red-500 font-medium">
+                    Occupied
+                  </span>
+                </div>
 
-                <p>
-                  <span className="font-medium">
-                    Phone:
-                  </span>{" "}
-                  {seat?.phone || "N/A"}
-                </p>
+                <div className="space-y-2 text-sm">
+                  <p>
+                    <span className="font-medium text-muted-foreground">Name:</span>{" "}
+                    {student ? `${student.firstName} ${student.lastName}` : "Loading..."}
+                  </p>
 
-                <p>
-                  <span className="font-medium">
-                    Course:
-                  </span>{" "}
-                  {seat?.course || "N/A"}
-                </p>
+                  <p>
+                    <span className="font-medium text-muted-foreground">Phone:</span>{" "}
+                    {student?.phone || "N/A"}
+                  </p>
 
-                <p>
-                  <span className="font-medium">
-                    Email:
-                  </span>{" "}
-                  {seat?.email || "N/A"}
-                </p>
+                  <p>
+                    <span className="font-medium text-muted-foreground">Plan:</span>{" "}
+                    {student?.plan || "N/A"}
+                  </p>
 
-                <p>
-                  <span className="font-medium">
-                    Joined At:
-                  </span>{" "}
-                  {seat?.joinedAt || "N/A"}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+                  <p>
+                    <span className="font-medium text-muted-foreground">Email:</span>{" "}
+                    {student?.email || "N/A"}
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-muted-foreground">Joined:</span>{" "}
+                    {student?.joinDate 
+                      ? new Date(student.joinDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+                      : "N/A"}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       )}
     </div>

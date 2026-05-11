@@ -42,14 +42,14 @@ export default function SeatPage() {
     <div className="space-y-6 max-w-7xl mx-auto">
       <SeatHeader />
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className=" gap-6">
         {/* Seat Layout */}
-        <div className="lg:col-span-2">
+        <div className="lg:w-full">
           <SeatLayout seats={seats} />
         </div>
 
         {/* Summary Panel */}
-        <SeatSummary seats={seats} />
+        {/* <SeatSummary seats={seats} /> */}
       </div>
     </div>
   );
