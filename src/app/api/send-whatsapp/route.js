@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       return res.status(401).json({ success: false, error: "Unauthorized" });
     }
     const user = await UserModel.findById(session.user.id);
-    console.log("User from session:", user);
+    // console.log("User from session:", user);
     if (!user) {
       return res.status(404).json({ success: false, error: "User not found" });
     }

@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📚 Vision Library
 
-## Getting Started
+A Next.js application for managing students, seating arrangements, and WhatsApp communications.
 
-First, run the development server:
+## Features
+
+- 👤 Student enrollment and management
+- 💺 Seat allocation system
+- 💬 WhatsApp messaging integration
+- 🔐 User authentication with OTP
+- 📅 Subscription plan management
+- 💳 Payment tracking
+- 📊 Dashboard analytics
+
+## Tech Stack
+
+- **Frontend**: React, Next.js, Tailwind CSS, shadcn/ui
+- **Backend**: Next.js API Routes, Express
+- **Database**: MongoDB with Mongoose
+- **Messaging**: Twilio WhatsApp API
+- **Email**: Nodemailer
+- **Authentication**: NextAuth, Better-auth
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- MongoDB
+- Twilio account (for WhatsApp)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/visionlibrary.git
+cd visionlibrary
+
+# Install dependencies
+npm install
+
+# Create environment file
+cp .env.example .env.local
+
+# Update .env.local with your credentials
+```
+
+### Environment Setup
+
+Edit `.env.local`:
+
+```env
+MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/visionlibrary
+TWILIO_ACCOUNT_SID=your_account_sid
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_PHONE_NUMBER=+1234567890
+NEXTAUTH_SECRET=your_secret_key
+NEXTAUTH_URL=http://localhost:3000
+```
+
+### Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── api/              # API endpoints
+│   ├── dashboard/        # Dashboard pages
+│   └── page.js           # Home page
+├── models/               # MongoDB schemas
+├── lib/                  # Utility functions
+├── zodSchema/            # Validation schemas
+└── hooks/                # Custom React hooks
+```
 
-## Learn More
+## Available Commands
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Development
+npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Build for production
+npm run build
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Start production server
+npm start
 
-## Deploy on Vercel
+# Run linter
+npm run lint
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Endpoints
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/signup` | Create user account |
+| POST | `/api/auth/otpverification` | Verify OTP |
+| POST | `/api/students` | Add new student |
+| GET | `/api/students` | Get all students |
+| POST | `/api/send-whatsapp` | Send WhatsApp message |
+| POST | `/api/whatsapp/appointmentmessage` | Send appointment reminder |
+
+## Deployment
+
+### Deploy on Vercel
+
+```bash
+npm run build
+git push  # Push to GitHub
+```
+
+Connect your repository to Vercel and it will auto-deploy.
+
+## Support
+
+- 📧 [Create an Issue](../../issues) for bug reports
+- 💬 [Start a Discussion](../../discussions) for questions
+
+## License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## Author
+
+Vahid Momin
+
+---
+
+For detailed documentation, see [README_DETAILED.md](./README_DETAILED.md) or [ARCHITECTURE.md](./ARCHITECTURE.md)

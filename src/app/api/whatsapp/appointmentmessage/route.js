@@ -30,11 +30,16 @@ export async function POST(req) {
     // Twilio Sandbox Number
     const formattedFromNumber = `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`;
     const message = await client.messages.create({
-      from: formattedFromNumber,
-      to: formattedToNumber,
+  from: formattedFromNumber,
+  to: formattedToNumber,
 
-      body: `Subject: ${subject}\n\n${content}`,
-    });
+  contentSid: "HXb5b62575e6e4ff6129ad7c8efe1f983e",
+
+  contentVariables: JSON.stringify({
+    "1": subject,
+    "2": content,
+  }),
+});
 
     return NextResponse.json(
       {

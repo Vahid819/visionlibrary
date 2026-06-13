@@ -167,6 +167,12 @@ export function SeatGrid({ seats }) {
                       ? new Date(student.joinDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
                       : "N/A"}
                   </p>
+                  <p>
+                    <span className="font-medium text-muted-foreground">Status:</span>{" "}
+                    <span className={student?.isActive ? "text-green-500" : "text-red-500"}>
+                      {student?.isActive ? "Active" : "Inactive"}
+                    </span>
+                  </p>
                 </div>
               </motion.div>
             );
