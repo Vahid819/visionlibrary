@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema(
             trim: true,
             unique: true,
         },
+        LibraryName:{
+            type: String,
+            trim: true,
+            required: [true, "please enter your library name"],
+        },
         otp:{
             type: Number,
         },

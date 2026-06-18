@@ -9,7 +9,7 @@ export async function POST(req){
     console.log("Connected to DB in signup route");
     try {
         const body = await req.json();
-        console.log("Received signup data:", body);
+        // console.log("Received signup data:", body);
         const existingUser = await UserModel.findOne({email: body.email});
 
         if(existingUser){
@@ -21,23 +21,26 @@ export async function POST(req){
         await sendOTPEmail(body.email, otp)
         const hashedPassword = await hash(body.password, 10);
 
-          if(existingUser.password){
-            await findOneAndUpdate({email: body.email}, {password: hashedPassword})
-            return new Response(JSON.stringify({ message: "Password updated successfully" }), { status: 200 });
-        }else if(existingUser.email){
-            await findOneAndUpdate
-            return new Response(JSON.stringify({ message: "OTP sent to email" }), { status: 200 });
-
-        }
+        
+        //   if(existingUser.password){
+        //     await findOneAndUpdate({email: body.email}, {password: hashedPassword})
+        //     return new Response(JSON.stringify({ message: "Password updated successfully" }), { status: 200 });
+        // }else if(existingUser.email){
+        //     await findOneAndUpdate
+        //     return new Response(JSON.stringify({ message: "OTP sent to email" }), { status: 200 });
+        // }
 
         const newUser = new UserModel({
             firstname: body.firstName,
             lastname: body.lastName,
             email: body.email,
+            libraryname: body.libraryName,
+            phone: body.phone,
             password: hashedPassword,
             otp: otp,
             otpCreatedAt: new Date(),
             otpExpiryDate: otpExpiryDate,
+            userverified: true,
         })
 
         console.log("New user created:", newUser);

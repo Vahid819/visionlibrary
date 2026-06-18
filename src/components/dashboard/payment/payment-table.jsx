@@ -14,31 +14,8 @@
     import { StatusBadge } from "./status-badge";
     import { Search } from "lucide-react";
 
-    const payments = [
-    {
-        id: "1",
-        name: "Rahul",
-        amount: "₹200",
-        status: "paid",
-        date: "Today",
-    },
-    {
-        id: "2",
-        name: "Sneha",
-        amount: "₹150",
-        status: "pending",
-        date: "Today",
-    },
-    {
-        id: "3",
-        name: "Amit",
-        amount: "₹300",
-        status: "failed",
-        date: "Yesterday",
-    },
-    ];
-
-    export function PaymentTable() {
+    export function PaymentTable({userdata}) {
+        const paymentdata = userdata.data
     return (
         <Card className="bg-background/60 backdrop-blur border border-border/50">
         <CardHeader className="flex flex-row items-center justify-between">
@@ -68,20 +45,20 @@
                     Status
                 </TableHead>
                 <TableHead className="text-muted-foreground text-xs">
-                    Date
+                    Plan
                 </TableHead>
                 </TableRow>
             </TableHeader>
 
             <TableBody>
-                {payments.map((p) => (
-                <TableRow key={p.id}>
-                    <TableCell className="font-medium">{p.name}</TableCell>
-                    <TableCell>{p.amount}</TableCell>
+                {paymentdata?.map((p,index) => (
+                <TableRow key={index}>
+                    <TableCell className="font-medium">{p.firstName}</TableCell>
+                    <TableCell>{p.gender}</TableCell>
                     <TableCell>
-                    <StatusBadge status={p.status} />
+                    <StatusBadge status={p.paymentStatus} />
                     </TableCell>
-                    <TableCell>{p.date}</TableCell>
+                    <TableCell>{p.plan}</TableCell>
                 </TableRow>
                 ))}
             </TableBody>

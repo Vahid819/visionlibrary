@@ -18,6 +18,12 @@ const userSchema = z
       .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please use a valid email")
       .trim(),
     
+      libraryName: z
+      .string()
+      .min(2, "Library name must be at least 2 characters")
+      .max(50, "Library name must be at most 50 characters")
+      .trim(),
+
     phone: z
       .string()
       .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format")

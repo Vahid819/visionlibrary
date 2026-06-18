@@ -10,7 +10,8 @@ const stats = [
   { title: "Pending", value: "12", icon: AlertCircle },
 ];
 
-export function PaymentStats() {
+export function PaymentStats({userdata}) {
+  // console.log(userdata)
   return (
     <div className="flex gap-4 md:flex-wrap justify-around">
       {stats.map((item) => (

@@ -12,41 +12,41 @@ export default function DashboardClient({ session }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchSeats = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  // const fetchSeats = async () => {
+  //   try {
+  //     setLoading(true);
+  //     setError(null);
 
-      const res = await fetch("/api/setting/get", {
-        cache: "no-store",
-      });
+  //     const res = await fetch("/api/setting/get", {
+  //       cache: "no-store",
+  //     });
 
-      if (!res.ok) throw new Error("Failed to fetch seats");
+  //     if (!res.ok) throw new Error("Failed to fetch seats");
 
-      const text = await res.text();
-      const result = text ? JSON.parse(text) : {};
-      // console.log("my data", result)
-      setSeats(result?.data || {});
-    } catch (err) {
-      console.error("Error fetching seats:", err);
-      setError("Failed to load seats");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     const text = await res.text();
+  //     const result = text ? JSON.parse(text) : {};
+  //     // console.log("my data", result)
+  //     setSeats(result?.data || {});
+  //   } catch (err) {
+  //     console.error("Error fetching seats:", err);
+  //     setError("Failed to load seats");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchSeats();
-  }, []);
+  // useEffect(() => {
+  //   fetchSeats();
+  // }, []);
 
   // 🔄 Loading UI (modern skeleton feel)
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
-        Loading dashboard...
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center text-muted-foreground">
+  //       Loading dashboard...
+  //     </div>
+  //   );
+  // }
 
   // ❌ Error UI
   if (error) {

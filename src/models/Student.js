@@ -8,7 +8,7 @@ const StudentSchema = new mongoose.Schema(
     phone:          { type: String, required: true, trim: true },
     email:          { type: String, trim: true, lowercase: true },
     dob:            { type: String },
-    gender:         { type: String, enum: ["Male", "Female", "Other", "Prefer not to say", ""] },
+    gender:         { type: String, enum: ["Male", "Female", "Other", "Prefer not to say"] },
     address:        { type: String },
     emergencyName:  { type: String },
     emergencyPhone: { type: String },
