@@ -22,25 +22,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EditdataContext } from "@/context/EditContext";
+import axios from "axios";
+import { toast } from "sonner";
 // import { getServerSession } from "next-auth";
 // import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 function page() {
-  const [edit, setEdit] = useContext(EditdataContext);
+  const [edit, setEdit, session] = useContext(EditdataContext);
 
   const editinputs = () => (edit === true ? setEdit(false) : setEdit(true));
+
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
       firstName: "",
       lastName: "",
-      email: "",
       phone: "",
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const res = await axios.patch("/api/setting", data)
+    toast.success(res.data.message);
     setEdit(!edit);
   };
 
@@ -92,24 +95,6 @@ function page() {
               />
             </FieldGroup>
             <FieldGroup className="flex flex-row mb-3">
-              <Controller
-                name="email"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-error={fieldState.invalid}>
-                    <FieldLabel>Email</FieldLabel>
-                    <Input
-                      {...field}
-                      placeholder="Email"
-                      aria-invalid={fieldState.invalid}
-                      disabled={!edit}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
               <Controller
                 name="phone"
                 control={control}

@@ -6,47 +6,44 @@ import { StatsSection } from "@/components/dashboard/stats-section";
 import { RecentBookings } from "@/components/dashboard/recent-bookings";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { SeatLayout } from "@/components/dashboard/seat/seat-layout";
+import DashboardSkeleton from "@/components/dashboard/setting/DashboardSkeleton";
 
 export default function DashboardClient({ session }) {
   const [seats, setSeats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // const fetchSeats = async () => {
-  //   try {
-  //     setLoading(true);
-  //     setError(null);
+  const fetchSeats = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  //     const res = await fetch("/api/setting/get", {
-  //       cache: "no-store",
-  //     });
+      const res = await fetch("/api/setting/setas", {
+        cache: "no-store",
+      });
 
-  //     if (!res.ok) throw new Error("Failed to fetch seats");
+      if (!res.ok) throw new Error("Failed to fetch seats");
 
-  //     const text = await res.text();
-  //     const result = text ? JSON.parse(text) : {};
-  //     // console.log("my data", result)
-  //     setSeats(result?.data || {});
-  //   } catch (err) {
-  //     console.error("Error fetching seats:", err);
-  //     setError("Failed to load seats");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      const text = await res.text();
+      const result = text ? JSON.parse(text) : {};
+      // console.log("my data", result)
+      setSeats(result?.data || {});
+    } catch (err) {
+      console.error("Error fetching seats:", err);
+      setError("Failed to load seats");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchSeats();
-  // }, []);
+  useEffect(() => {
+    fetchSeats();
+  }, []);
 
   // 🔄 Loading UI (modern skeleton feel)
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center text-muted-foreground">
-  //       Loading dashboard...
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+     return <DashboardSkeleton />;
+  }
 
   // ❌ Error UI
   if (error) {
@@ -67,7 +64,7 @@ export default function DashboardClient({ session }) {
     <div className="min-h-screen bg-linear-to-br from-background to-muted/40 p-4 md:p-6 space-y-6">
       
       {/* 🔝 Header */}
-      <div className="sticky top-0 z-10 backdrop-blur bg-background/70 border-b border-border/40 rounded-xl p-3">
+      <div className="sticky top-0 right-0 z-10 backdrop-blur bg-background/70 border-b border-border/40 rounded-xl p-3 w-fit md:w-full">
         <DashboardHeader />
       </div>
 

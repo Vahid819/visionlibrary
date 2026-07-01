@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
+import axios from "axios";
 
 export default function Page() {
   const router = useRouter();
@@ -25,18 +26,10 @@ export default function Page() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await res.json();
+      const res = await axios.post("/api/auth/signup");
 
       if (!res.ok) {
-        toast.error(result.message);
+        toast.error(res.message);
       } else {
         toast.success("OTP sent successfully 📧");
         router.push(`/auth/verify-otp?email=${data.email}`);
@@ -48,7 +41,6 @@ export default function Page() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#0f172a] via-[#1e293b] to-[#020617] text-white">
-
       {/* Glow Background */}
       <div className="absolute w-100 h-100 bg-indigo-600/30 blur-3xl rounded-full top-10 left-10"></div>
 
@@ -60,7 +52,6 @@ export default function Page() {
       >
         <Card className="backdrop-blur-xl bg-white/10 border border-white/10 shadow-2xl rounded-2xl">
           <CardContent className="p-6 space-y-5">
-
             {/* Title */}
             <h2 className="text-2xl font-bold text-center">
               Create Account 🚀
@@ -68,10 +59,13 @@ export default function Page() {
 
             {/* Form */}
             <form
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(onSubmit, (errors) => {
+                Object.entries(errors).forEach(([key, value]) => {
+                  console.log(key, value?.message);
+                });
+              })}
               className="space-y-4"
             >
-
               {/* First + Last Name */}
               <div className="flex gap-2">
                 <div className="w-1/2">
@@ -147,7 +141,10 @@ export default function Page() {
               </div>
 
               {/* Button */}
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+              >
                 <Button
                   type="submit"
                   disabled={isSubmitting}
@@ -156,7 +153,6 @@ export default function Page() {
                   {isSubmitting ? "Creating..." : "Sign Up"}
                 </Button>
               </motion.div>
-
             </form>
 
             {/* Login Link */}
@@ -174,7 +170,6 @@ export default function Page() {
                 Login
               </Link>
             </motion.p>
-
           </CardContent>
         </Card>
       </motion.div>

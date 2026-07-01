@@ -12,7 +12,6 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export default async function DashboardLayout({ children }) {
   const session = await getServerSession(authOptions);
-
   return (
     <TooltipProvider>
       {" "}

@@ -4,7 +4,6 @@ import twilio from "twilio";
 export async function POST(req) {
   try {
     const body = await req.json();
-    console.log("this is a body", body);
     const { phone, subject, content } = body;
 
     if (!phone || !subject || !content) {

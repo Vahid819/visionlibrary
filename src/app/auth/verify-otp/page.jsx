@@ -15,6 +15,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import axios from "axios";
 
 function VerifyOTPPage() {
   const params = useSearchParams();
@@ -58,18 +59,10 @@ function VerifyOTPPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/otpverification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, otp }),
-      });
-
-      const data = await res.json();
+      const res = await axios.post("/api/auth/otpverification");
 
       if (!res.ok) {
-        setError(data.error || "Invalid OTP ❌");
+        setError(res.error || "Invalid OTP ❌");
       } else {
         router.push("/dashboard");
       }
@@ -85,13 +78,7 @@ function VerifyOTPPage() {
     if (!email || timer > 0) return;
 
     try {
-      await fetch("/api/auth/resend-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      await axios.post("/api/auth/resend-otp");
 
       setTimer(60);
     } catch (err) {
@@ -123,7 +110,7 @@ function VerifyOTPPage() {
                 value={otp}
                 onChange={(value) => setOtp(value)}
               >
-                <InputOTPGroup>
+                <InputOTPGroup className={"border border-black"}>
                   {[...Array(6)].map((_, i) => (
                     <InputOTPSlot key={i} index={i} />
                   ))}

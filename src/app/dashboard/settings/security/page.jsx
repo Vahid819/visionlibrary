@@ -26,23 +26,23 @@ import { EditdataContext } from "@/context/EditContext";
 import { Controller, useForm } from "react-hook-form";
 
 function page() {
-  const [edit, setEdit] = useContext(EditdataContext);
+    const [edit, setEdit, session] = useContext(EditdataContext);
   const [show, setShow] = useState(false)
 
-  const editinputs = () => (edit === true ? setEdit(false) : setEdit(true));
+    const editinputs = () => (edit === true ? setEdit(false) : setEdit(true));
+
 
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      newPassword: "",
+      password: "",
       confirmPassword: "",
     },
   });
 
-  const NewPassword = watch("passowrd");
+  const password = watch("password");
 
   const onSubmit = (data) => {
-    console.log(data);
-    setEdit(!edit);
+    
   };
 
   return (
@@ -71,8 +71,9 @@ function page() {
                     <Input
                       {...field}
                       value={field.value ?? ""}
-                      type={!show ? "text" : "password"}
+                      type={show ? "text" : "password"}
                       placeholder="New Password"
+                      disabled={!edit}
                     />
                     {fieldState.error && (
                       <FieldError errors={[fieldState.error]} />
@@ -93,9 +94,10 @@ function page() {
                     <FieldLabel>Confirm Password</FieldLabel>
                     <Input
                       {...field}
-                      type={!show ? "text" : "password"}
+                      type={show ? "text" : "password"}
                       value={field.value ?? ""}
                       placeholder="Confirm Password"
+                      disabled={!edit}
                     />
                     {fieldState.error && (
                       <FieldError errors={[fieldState.error]} />
@@ -109,7 +111,7 @@ function page() {
             </FieldGroup>
             <FieldGroup className="flex flex-row mt-3">
               <Button type="submit">Submit</Button>
-              <Button type="button">Edit</Button>
+              <Button type="button" onClick={editinputs}>Edit</Button>
             </FieldGroup>
           </form>
         </CardContent>

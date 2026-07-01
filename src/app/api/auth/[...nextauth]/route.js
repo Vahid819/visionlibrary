@@ -40,6 +40,7 @@ export const authOptions = {
             id: user._id.toString(),
             email: user.email,
             name: user.firstname,
+            library: user.libraryname,
           };
         } catch (error) {
           console.error("🚨 AUTHORIZE ERROR:", error);
@@ -53,11 +54,10 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // console.log("JWT USER:", user);
-
         token.id = user.id;
         token.email = user.email;
-        token.name = user.name; // ✅ FIXED
+        token.name = user.name;
+        token.library = user.library // ✅ FIXED
       }
       return token;
     },
@@ -68,7 +68,8 @@ export const authOptions = {
       if (session.user) {
         session.user.id = token.id;
         session.user.email = token.email;
-        session.user.name = token.name; // ✅ FIXED
+        session.user.name = token.name;
+        session.user.library = token.library // ✅ FIXED
       }
       return session;
     },

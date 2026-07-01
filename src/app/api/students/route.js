@@ -8,7 +8,6 @@ import Seat from "@/models/Seats"; // ✅ Imported Seat model
 // GET — fetch all students
 export async function GET() {
   const session = await getServerSession(authOptions);
-  // console.log("session",session)
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

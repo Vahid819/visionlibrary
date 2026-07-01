@@ -14,11 +14,12 @@ export function DashboardHeader() {
       className="
         flex flex-col gap-5 rounded-3xl border
         bg-background/80 p-6 shadow-sm backdrop-blur
-        md:flex-row md:items-center md:justify-between
+        md:flex-row md:items-center md:justify-between absolute md:static right-0
+        
       "
     >
       {/* Left Content */}
-      <div className="space-y-2">
+      <div className="hidden md:block space-y-2">
         <div className="flex items-center gap-3">
           <div
             className="
@@ -82,7 +83,7 @@ export function DashboardHeader() {
               "
             />
 
-            <span className="relative z-10 font-medium">
+            <span className="relative z-10 font-medium hidden md:block">
               Add Student
             </span>
           </Link>
