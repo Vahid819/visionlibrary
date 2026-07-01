@@ -1,32 +1,88 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Wallet, CreditCard, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-const stats = [
-  { title: "Total Revenue", value: "₹25,000", icon: Wallet },
-  { title: "Successful", value: "180", icon: CreditCard },
-  { title: "Pending", value: "12", icon: AlertCircle },
-];
+export function PaymentStats({ userdata, loading = false }) {
+  // Calculate stats
+  const users = userdata?.data || [];
 
-export function PaymentStats({userdata}) {
-  // console.log(userdata)
+  const totalRevenue = users.reduce(
+    (sum, user) => sum + (Number(user.amountPaid) || 0),
+    0
+  );
+
+  const successful = users.filter(
+  (user) => user.paymentStatus === "Paid"
+).length;
+
+const pending = users.filter(
+  (user) => user.paymentStatus === "Pending"
+).length;
+
+  const stats = [
+    {
+      title: "Total Revenue",
+      value: `₹${totalRevenue.toLocaleString("en-IN")}`,
+      icon: Wallet,
+    },
+    {
+      title: "Successful",
+      value: successful,
+      icon: CreditCard,
+    },
+    {
+      title: "Pending",
+      value: pending,
+      icon: AlertCircle,
+    },
+  ];
+
+  if (loading) {
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <Card key={index}>
+            <CardContent className="flex items-center justify-between p-5">
+              <div className="space-y-3">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-8 w-20" />
+              </div>
+
+              <Skeleton className="h-12 w-12 rounded-lg" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div className="flex gap-4 md:flex-wrap justify-around">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {stats.map((item) => (
-        <motion.div key={item.title} whileHover={{ scale: 1.03 }}>
-          <Card className="p-4 flex justify-between items-center bg-background/60 backdrop-blur hover:shadow-lg transition-all">
-            <div>
-              <p className="text-xs text-muted-foreground text-center">{item.title}</p>
-              <p className="text-xl font-semibold text-center tracking-tight">
-                {item.value}
-              </p>
-            </div>
+        <motion.div
+          key={item.title}
+          whileHover={{ scale: 1.03 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Card className="transition-all hover:shadow-lg">
+            <CardContent className="flex items-center justify-between p-5">
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  {item.title}
+                </p>
 
-            <div className="p-2 rounded-md bg-primary/10 text-primary">
-              <item.icon size={18} />
-            </div>
+                <h2 className="mt-1 text-2xl font-bold">
+                  {item.value}
+                </h2>
+              </div>
+
+              <div className="rounded-lg bg-primary/10 p-3 text-primary">
+                <item.icon className="h-6 w-6" />
+              </div>
+            </CardContent>
           </Card>
         </motion.div>
       ))}

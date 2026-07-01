@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { SeatHeader } from "@/components/dashboard/seats/seat-header";
 import { SeatLayout } from "@/components/dashboard/seats/seat-layout";
 import { SeatSummary } from "@/components/dashboard/seats/seat-summary";
+import SeatsSkeleton from "@/components/skeleton/SeatsSkeleton";
 
 export default function SeatPage() {
   const [seats, setSeats] = useState({});
@@ -12,7 +13,7 @@ export default function SeatPage() {
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const res = await fetch("/api/setting/get", {
+        const res = await fetch("/api/setting/setas", {
           cache: "no-store", // 🔥 important for fresh data
         });
 
@@ -33,7 +34,7 @@ export default function SeatPage() {
 
 
   if (loading) {
-    return <p className="text-center">Loading seats...</p>;
+    return <SeatsSkeleton />;
   }
 
   return (

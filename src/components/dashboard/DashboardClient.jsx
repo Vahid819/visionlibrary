@@ -6,7 +6,7 @@ import { StatsSection } from "@/components/dashboard/stats-section";
 import { RecentBookings } from "@/components/dashboard/recent-bookings";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { SeatLayout } from "@/components/dashboard/seat/seat-layout";
-import DashboardSkeleton from "@/components/dashboard/setting/DashboardSkeleton";
+import DashboardSkeleton from "@/components/skeleton/DashboardSkeleton";
 
 export default function DashboardClient({ session }) {
   const [seats, setSeats] = useState({});

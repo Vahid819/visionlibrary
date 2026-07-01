@@ -1,25 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DataTable } from "@/components/messages/data-table";
 import { columns } from "@/components/messages/columns";
 import Message from "@/components/messages/messages";
 
 export default function MessageClientWrapper({ data }) {
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState();
+
+  const tableColumns = useMemo(
+    () => columns(setSelectedStudent),
+    []
+  );
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-      <div className="rounded-md border w-full px-2 py-4 h-auto">
-        <DataTable 
-           columns={columns(setSelectedStudent)} 
-           data={data} 
+    <div className="grid gap-6 lg:grid-cols-2">
+
+      <div className="rounded-xl border bg-card p-4 shadow-sm">
+        <DataTable
+          columns={tableColumns}
+          data={data}
         />
       </div>
-      
-      <div>
-        <Message selectedStudent={selectedStudent} />
+
+      <div className="rounded-xl border bg-card p-4 shadow-sm">
+        <Message
+          selectedStudent={selectedStudent}
+        />
       </div>
+
     </div>
   );
 }

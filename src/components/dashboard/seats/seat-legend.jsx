@@ -1,9 +1,9 @@
 export function SeatLegend() {
   return (
     <div className="flex gap-4 text-xs justify-center">
-      <Legend color="bg-background border" label="Available" />
-      <Legend color="bg-primary" label="Selected" />
-      <Legend color="bg-muted" label="Pending" />
+      <Legend color="bg-green-500 border" label="Available" />
+      <Legend color="bg-red-500 border" label="Selected" />
+      <Legend color="bg-gray-500 border" label="Booked" />
     </div>
   );
 }

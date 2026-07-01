@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { messageSchema } from "@/zodSchema/messageSchema";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import { toast } from "sonner";
+import { Loader2, Phone, User } from "lucide-react";
+
+import { messageSchema } from "@/zodSchema/messageSchema";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,9 +18,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group";
+import {
+  InputGroup,
+  InputGroupTextarea,
+} from "@/components/ui/input-group";
 
 export default function Message({ selectedStudent }) {
   const [isSending, setIsSending] = useState(false);
@@ -30,46 +43,45 @@ export default function Message({ selectedStudent }) {
     },
   });
 
-  async function onSubmit(data) {
+  const content = form.watch("content");
+
+  async function onSubmit(values) {
     if (!selectedStudent) {
-      toast.error("Please select a student from the table first.");
+      toast.error("Please select a student first.");
       return;
     }
 
     if (!selectedStudent.phone) {
-      toast.error("This student does not have a phone number on file.");
+      toast.error("Phone number not found.");
       return;
     }
 
     setIsSending(true);
 
     try {
-      // Call our new Twilio API route
-      const response = await fetch("/api/whatsapp", {
+      const res = await fetch("/api/whatsapp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           phone: selectedStudent.phone,
-          subject: data.subject,
-          content: data.content,
+          subject: values.subject,
+          content: values.content,
         }),
       });
 
-      const result = await response.json();
+      const result = await res.json();
 
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to send message");
+      if (!res.ok) {
+        throw new Error(result.message);
       }
 
-      toast.success(`WhatsApp message sent successfully to ${selectedStudent.name}!`);
-      
-      // Optional: Clear the form after sending
-      form.reset();
+      toast.success("Message sent successfully.");
 
-    } catch (error) {
-      toast.error(error.message);
+      form.reset();
+    } catch (err) {
+      toast.error(err.message);
     } finally {
       setIsSending(false);
     }
@@ -77,27 +89,70 @@ export default function Message({ selectedStudent }) {
 
   return (
     <Card>
+
       <CardHeader>
-        <CardTitle>Twilio WhatsApp Message</CardTitle>
+
+        <CardTitle>
+          WhatsApp Message
+        </CardTitle>
+
         <CardDescription>
-          {selectedStudent 
-            ? <span>Sending to: <strong className="text-primary">{selectedStudent.name}</strong> ({selectedStudent.phone})</span> 
-            : <span className="text-red-500">No student selected. Please select one from the list.</span>
-          }
+          Send a WhatsApp message directly to a student.
         </CardDescription>
+
       </CardHeader>
 
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <CardContent className="space-y-6">
+      <CardContent className="space-y-6">
+
+        {selectedStudent ? (
+          <div className="rounded-lg border bg-muted/40 p-4 space-y-2">
+
+            <div className="flex items-center gap-2">
+              <User className="size-4 text-primary" />
+              <span className="font-medium">
+                {selectedStudent.name}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Phone className="size-4" />
+              {selectedStudent.phone}
+            </div>
+
+          </div>
+        ) : (
+          <div className="rounded-lg border border-dashed p-6 text-center text-muted-foreground">
+            Select a student from the table to start sending messages.
+          </div>
+        )}
+
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-5"
+        >
+
           <FieldGroup>
+
             <Controller
               name="subject"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field>
-                  <FieldLabel>Subject</FieldLabel>
-                  <Input {...field} placeholder="e.g., Important Update" disabled={!selectedStudent || isSending} />
-                  <FieldError>{fieldState.error?.message}</FieldError>
+
+                  <FieldLabel>
+                    Subject
+                  </FieldLabel>
+
+                  <Input
+                    {...field}
+                    placeholder="Payment Reminder"
+                    disabled={!selectedStudent || isSending}
+                  />
+
+                  <FieldError>
+                    {fieldState.error?.message}
+                  </FieldError>
+
                 </Field>
               )}
             />
@@ -107,23 +162,58 @@ export default function Message({ selectedStudent }) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field>
-                  <FieldLabel>Content</FieldLabel>
+
+                  <FieldLabel>
+                    Message
+                  </FieldLabel>
+
                   <InputGroup>
-                    <InputGroupTextarea {...field} placeholder="Type your message here..." disabled={!selectedStudent || isSending} />
+
+                    <InputGroupTextarea
+                      {...field}
+                      rows={7}
+                      placeholder="Write your message..."
+                      disabled={!selectedStudent || isSending}
+                    />
+
                   </InputGroup>
-                  <FieldError>{fieldState.error?.message}</FieldError>
+
+                  <div className="flex justify-between mt-2">
+
+                    <FieldError>
+                      {fieldState.error?.message}
+                    </FieldError>
+
+                    <span className="text-xs text-muted-foreground">
+                      {content.length}/1000
+                    </span>
+
+                  </div>
+
                 </Field>
               )}
             />
-          </FieldGroup>
-        </CardContent>
 
-        <CardFooter>
-          <Button type="submit" disabled={!selectedStudent || isSending}>
-            {isSending ? "Sending..." : "Send via WhatsApp API"}
+          </FieldGroup>
+
+          <Button
+            className="w-full"
+            disabled={!selectedStudent || isSending}
+          >
+            {isSending ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Send WhatsApp Message"
+            )}
           </Button>
-        </CardFooter>
-      </form>
+
+        </form>
+
+      </CardContent>
+
     </Card>
   );
 }

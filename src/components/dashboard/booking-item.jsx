@@ -1,25 +1,63 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { CalendarDays, Armchair, User } from "lucide-react";
 
-export function BookingItem({ name, seat, time }) {
+export function BookingItem({
+  name,
+  seat,
+  date,
+  status = "Active",
+}) {
+  const initials = name
+    ? name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "?";
+
   return (
     <motion.div
-      whileHover={{ x: 5 }}
-      className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition"
+      whileHover={{ x: 4 }}
+      transition={{ duration: 0.2 }}
+      className="flex items-center justify-between rounded-xl border p-4 hover:bg-muted/40 transition-colors"
     >
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-medium">
-          {name.charAt(0)}
+      {/* Left */}
+      <div className="flex items-center gap-4">
+        <div className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">
+          {initials}
         </div>
 
         <div>
-          <p className="text-sm font-medium">{name}</p>
-          <p className="text-xs text-muted-foreground">Seat {seat}</p>
+          <div className="flex items-center gap-2">
+            <User className="size-4 text-muted-foreground" />
+            <p className="font-medium">{name}</p>
+          </div>
+
+          <div className="mt-1 flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Armchair className="size-4" />
+              Seat {seat}
+            </div>
+
+            <div className="flex items-center gap-1">
+              <CalendarDays className="size-4" />
+              {new Date(date).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
-      <span className="text-xs text-muted-foreground">{time}</span>
+      {/* Right */}
+      <span className="rounded-full bg-green-500/10 px-3 py-1 text-xs font-medium text-green-600">
+        {status}
+      </span>
     </motion.div>
   );
 }

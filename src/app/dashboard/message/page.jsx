@@ -5,41 +5,53 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import MessageClientWrapper from "./MessageClientWrapper";
 
 async function getStudents() {
-  const session = await getServerSession(authOptions);
-  if (!session) return [];
+  try {
+    const session = await getServerSession(authOptions);
 
-  await connectDB();
+    if (!session) return [];
 
-  // Fetch active students belonging to this user
-  const students = await StudentModel.find({ 
-    createdBy: session.user.id,
-    isActive: true 
-  }).lean();
+    await connectDB();
 
-  // Format the data for your DataTable
-  return students.map((student) => ({
-    id: student._id.toString(),
-    name: `${student.firstName} ${student.lastName}`,
-    phone: student.phone,
-    email: student.email,
-    plan: student.plan,
-  }));
+    const students = await StudentModel.find({
+      createdBy: session.user.id,
+      isActive: true,
+    })
+      .select(
+        "_id firstName lastName phone email plan paymentStatus seat"
+      )
+      .lean();
+
+    return students.map((student) => ({
+      id: student._id.toString(),
+      name: `${student.firstName} ${student.lastName}`,
+      phone: student.phone,
+      email: student.email,
+      plan: student.plan,
+      seat: student.seat,
+      paymentStatus: student.paymentStatus,
+    }));
+  } catch (error) {
+    console.error("Failed to load students:", error);
+    return [];
+  }
 }
 
-export default async function DemoPage() {
-  const data = await getStudents();
+export default async function MessagePage() {
+  const students = await getStudents();
 
   return (
-    <div className="container flex flex-wrap mx-auto py-10">
-      <div className="mb-4 w-full">
-        <h1 className="text-2xl font-bold">Messages</h1>
-        <p className="text-muted-foreground">
-          Select a student from the list to send them a WhatsApp message.
+    <div className="container mx-auto py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">
+          Messages
+        </h1>
+
+        <p className="text-muted-foreground mt-1">
+          Select a student to send a WhatsApp message.
         </p>
       </div>
-      
-      {/* Pass the data to our Client Wrapper */}
-      <MessageClientWrapper data={data} />
+
+      <MessageClientWrapper data={students} />
     </div>
   );
 }
