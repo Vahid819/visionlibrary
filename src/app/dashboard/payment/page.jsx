@@ -13,7 +13,7 @@ export default function PaymentPage() {
   
   const getUserdata = async ()=>{
     try {
-      const userdata = await axios.get("/api/students/")
+      const userdata = await axios.get("/api/students")
       setUserdata(userdata.data)
     } catch (error) {
       console.error("problem in url",error);

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export async function POST(req, res) {
+export async function PATCH(req, res) {
   await dbconnect();
 
   try {
@@ -32,14 +32,16 @@ export async function POST(req, res) {
       });
     }
 
-    await Seat.create({
-      userId,
-      seat: seats,
-    });
+    const updateseatdata = await Seat.findOneAndUpdate(
+      { userId },
+      { seat: seats },
+      { new: true, upsert: true }
+    );
 
     return NextResponse.json({
       success: true,
-      message: `${seatNumber} seats created successfully`,
+      message: `${seatNumber} seats updated successfully`,
+      data: updateseatdata,
     });
   } catch (error) {
     console.log("ERROR:", error);

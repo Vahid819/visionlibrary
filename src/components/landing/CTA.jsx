@@ -1,101 +1,85 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function CTA() {
-  return (
-    <section className="py-24 px-6 max-w-7xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="relative rounded-3xl border border-teal-400/20 bg-[#060f1e] p-12 md:p-20 text-center overflow-hidden"
-      >
-        {/* Background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-100 bg-teal-400/6 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-75 h-75 bg-teal-400/4 rounded-full blur-3xl pointer-events-none" />
+  const boxRef = useRef(null);
 
-        {/* Grid overlay */}
+  useEffect(() => {
+    gsap.from(boxRef.current, {
+      opacity: 0,
+      y: 40,
+      scale: 0.97,
+      duration: 0.9,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: boxRef.current,
+        start: "top 80%",
+      },
+    });
+  }, []);
+
+  return (
+    <section className="py-24 px-6 max-w-6xl mx-auto">
+      <div
+        ref={boxRef}
+        className="relative rounded-3xl border border-white/[0.07] bg-white/[0.015] p-12 md:p-20 text-center overflow-hidden"
+      >
+        {/* Glows */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-teal-400/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -right-20 w-[300px] h-[300px] bg-teal-400/4 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Grid */}
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-40 pointer-events-none"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(45,212,191,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(45,212,191,0.06) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
+              "linear-gradient(rgba(45,212,191,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(45,212,191,0.04) 1px, transparent 1px)",
+            backgroundSize: "36px 36px",
           }}
         />
 
-        {/* Decorative corner star */}
-        <div className="absolute bottom-6 right-6 text-teal-400/20 text-5xl">✦</div>
-        <div className="absolute top-6 left-6 text-teal-400/10 text-3xl">✦</div>
-
         <div className="relative z-10">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-xs font-bold text-teal-400 tracking-widest uppercase mb-4"
-          >
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-teal-400/15 bg-teal-400/5 text-teal-400/70 text-[10px] font-semibold tracking-widest uppercase mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
             Coming Soon
-          </motion.p>
+          </span>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-4 max-w-3xl mx-auto leading-tight"
+          <h2
+            className="text-4xl sm:text-5xl md:text-6xl font-black tracking-[-3px] leading-[0.95] mb-4 max-w-2xl mx-auto"
             style={{ fontFamily: "Syne, sans-serif" }}
           >
-            Ready to manage your{" "}
-            <span className="text-teal-400">study room smarter?</span>
-          </motion.h2>
+            Ready to take control
+            <br />
+            <span className="text-teal-400">of your library?</span>
+          </h2>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="text-base text-white/40 mb-10 font-light max-w-lg mx-auto"
-          >
-            Sleek dark mode design. Real-time availability. Join the waitlist and be
-            first to know when we launch.
-          </motion.p>
+          <p className="text-[15px] text-white/30 mb-8 font-light max-w-md mx-auto leading-relaxed">
+            Join the waitlist. Be the first to know when Vision Library launches.
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            {/* Email input + CTA */}
-            <div className="flex w-full max-w-md bg-white/5 border border-white/10 rounded-xl overflow-hidden">
-              <input
-                type="email"
-                placeholder="Enter your email..."
-                className="flex-1 bg-transparent px-4 py-3.5 text-sm text-white placeholder:text-white/30 outline-none"
-              />
-              <button className="px-6 py-3.5 bg-teal-400 hover:bg-teal-300 text-black font-bold text-sm transition-colors whitespace-nowrap">
-                Join Waitlist →
-              </button>
-            </div>
-          </motion.div>
+          <div className="flex items-center justify-center gap-0 max-w-sm mx-auto bg-white/[0.04] border border-white/[0.08] rounded-xl overflow-hidden">
+            <input
+              type="email"
+              placeholder="your@email.com"
+              className="flex-1 bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/20 outline-none"
+            />
+            <button className="px-5 py-3 bg-teal-400 hover:bg-teal-300 text-black text-sm font-bold transition-colors whitespace-nowrap">
+              Join →
+            </button>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.6 }}
-            className="text-xs text-white/20 mt-4"
-          >
-            No spam. We'll only email you when we launch. 🚀
-          </motion.p>
+          <p className="text-[11px] text-white/15 mt-3">
+            No spam. Only the launch email.
+          </p>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

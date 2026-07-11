@@ -1,120 +1,121 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const FEATURES = [
   {
+    icon: "🪑",
+    title: "Smart seat management",
+    desc: "Interactive seat map with live occupancy. Assign and manage seats in one click.",
+    tag: "Core",
+  },
+  {
     icon: "💳",
-    title: "Track All Transactions",
-    desc: "Real-time payment tracking with Paid, Pending, and Failed status. Full revenue analytics and export functionality built in.",
+    title: "Payment tracking",
+    desc: "Track paid, pending, and failed payments. Export reports anytime.",
     tag: "Payments",
   },
   {
-    icon: "🪑",
-    title: "Smart Seat Management",
-    desc: "Interactive seat map with live availability updates. Assign, book, and manage seats with a single click from your dashboard.",
-    tag: "Seats",
-  },
-  {
     icon: "💬",
-    title: "WhatsApp Messaging",
-    desc: "Broadcast messages directly to members by seat or user. Send reminders, payment alerts, and renewal notices instantly.",
+    title: "WhatsApp messaging",
+    desc: "Broadcast messages to members instantly. Send renewal reminders automatically.",
     tag: "Messaging",
   },
   {
     icon: "📊",
-    title: "Efficient Admin Dashboard",
-    desc: "KPI overview, recent activity feed, expiring members — everything you need in one clean, fast, dark-mode dashboard.",
-    tag: "Dashboard",
+    title: "Revenue analytics",
+    desc: "Daily, weekly, monthly revenue charts. Know exactly how your business performs.",
+    tag: "Analytics",
   },
   {
     icon: "🔔",
-    title: "Expiry Alerts",
-    desc: "Automatic notifications for upcoming renewals. Never let a membership slip through the cracks again with smart reminders.",
-    tag: "Alerts",
+    title: "Expiry alerts",
+    desc: "Auto-notify members before their membership expires. Zero manual work.",
+    tag: "Automation",
   },
   {
     icon: "⚙️",
-    title: "Full Configuration",
-    desc: "Customize seating layout, payment methods, UPI settings, and security — complete admin control from the settings panel.",
+    title: "Full configuration",
+    desc: "Set rows, columns, pricing, and shifts. Fully customizable to your library.",
     tag: "Settings",
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
-};
-
 export default function Features() {
+  const headRef = useRef(null);
+
+  useEffect(() => {
+    gsap.from(headRef.current, {
+      opacity: 0,
+      y: 32,
+      duration: 0.8,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: headRef.current,
+        start: "top 85%",
+      },
+    });
+  }, []);
+
   return (
-    <section id="features" className="py-24 px-6 max-w-7xl mx-auto">
+    <section id="features" className="py-24 px-6 max-w-6xl mx-auto">
+
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="mb-16"
-      >
-        <p className="text-xs font-bold text-teal-400 tracking-widest uppercase mb-3">
-          Everything you need
+      <div ref={headRef} className="mb-14">
+        <p className="text-[11px] font-bold text-teal-400 tracking-[0.12em] uppercase mb-3">
+          Features
         </p>
         <h2
-          className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-tight mb-4 max-w-2xl"
+          className="text-4xl sm:text-5xl font-black tracking-[-2px] leading-tight max-w-lg mb-4"
           style={{ fontFamily: "Syne, sans-serif" }}
         >
-          Built for library{" "}
-          <span className="text-teal-400">administrators</span>
+          Everything a study room needs
         </h2>
-        <p className="text-base text-white/40 max-w-xl leading-relaxed font-light">
-          From seat booking to payment tracking, Vision Library gives you complete control
-          over your study room in one dashboard.
+        <p className="text-[15px] text-white/35 max-w-md leading-relaxed font-light">
+          Built specifically for study room and library owners in India. No bloat, just what you need.
         </p>
-      </motion.div>
+      </div>
 
       {/* Grid */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {FEATURES.map((f, i) => (
           <motion.div
             key={i}
-            variants={cardVariants}
-            className="group relative bg-white/3 border border-white/5 rounded-2xl p-6 hover:border-teal-400/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ y: -2 }}
+            className="group relative bg-white/[0.02] border border-white/[0.06] rounded-2xl p-5 hover:border-teal-400/20 transition-all duration-300 overflow-hidden cursor-default"
           >
             {/* Hover glow */}
-            <div className="absolute inset-0 bg-linear-to-br from-teal-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-400/4 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 rounded-2xl pointer-events-none" />
 
-            {/* Tag */}
-            <span className="inline-block text-xs font-semibold text-teal-400/70 tracking-widest uppercase mb-4 px-2 py-1 bg-teal-400/5 rounded-md border border-teal-400/10">
-              {f.tag}
-            </span>
-
-            {/* Icon */}
-            <div className="w-12 h-12 rounded-xl bg-teal-400/8 border border-teal-400/15 flex items-center justify-center text-xl mb-5 group-hover:scale-110 transition-transform duration-300">
-              {f.icon}
+            <div className="flex items-start gap-4 relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-lg flex-shrink-0 group-hover:border-teal-400/20 transition-colors duration-300">
+                {f.icon}
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-teal-400/60 tracking-widest uppercase">
+                  {f.tag}
+                </span>
+                <h3
+                  className="text-sm font-bold text-white mt-0.5 mb-1.5"
+                  style={{ fontFamily: "Syne, sans-serif" }}
+                >
+                  {f.title}
+                </h3>
+                <p className="text-[13px] text-white/35 leading-relaxed font-light">{f.desc}</p>
+              </div>
             </div>
-
-            <h3
-              className="text-lg font-bold text-white mb-2 leading-tight"
-              style={{ fontFamily: "Syne, sans-serif" }}
-            >
-              {f.title}
-            </h3>
-            <p className="text-sm text-white/40 leading-relaxed font-light">{f.desc}</p>
           </motion.div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }

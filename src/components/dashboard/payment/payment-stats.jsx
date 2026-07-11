@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 export function PaymentStats({ userdata, loading = false }) {
   // Calculate stats
   const users = userdata?.data || [];
+  console.log(users, "users");
 
   const totalRevenue = users.reduce(
     (sum, user) => sum + (Number(user.amountPaid) || 0),

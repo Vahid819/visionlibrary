@@ -39,7 +39,7 @@ function page() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post("/api/setting/setas", data);
+      const res = await axios.patch("/api/setting/setas", data);
 
       toast.success(res.data.message);
     } catch (error) {

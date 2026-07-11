@@ -41,7 +41,8 @@ import {
 } from "lucide-react";
 import LogoutButton from "./LogoutButton";
 
-export function AppSidebar({session}) {;
+export function AppSidebar({ session }) {
+  const libraryName = session?.user?.library;
 
   return (
     <Sidebar
@@ -50,74 +51,19 @@ export function AppSidebar({session}) {;
       className=" w-64 data-[collapsible=icon]:w-16"
     >
       {/* 🔹 HEADER */}
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              {/* 🔹 Trigger */}
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  className="
-              flex items-center w-full h-11 gap-3 px-3 rounded-lg
-              bg-muted/30 hover:bg-muted transition-all
-              border border-transparent hover:border-border
-              group-data-[collapsible=icon]:justify-center
-              group-data-[collapsible=icon]:px-0
-            "
-                >
-                  {/* Workspace Icon */}
-                  <div className="flex items-center justify-center w-8 h-8 rounded-md bg-background">
-                    <Building2 size={16} />
-                  </div>
+        <SidebarHeader className="px-4 py-4">
+  <div className="flex items-center gap-3">
+    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+      <Building2 className="h-4 w-4 text-primary" />
+    </div>
 
-                  {/* Text */}
-                  <div className="flex flex-col text-left leading-tight group-data-[collapsible=icon]:hidden">
-                    <span className="text-sm font-medium">Vision Library</span>
-                    <span className="text-[11px] text-muted-foreground">
-                      Switch workspace
-                    </span>
-                  </div>
-
-                  {/* Arrow */}
-                  <ChevronDown
-                    size={16}
-                    className="ml-auto opacity-50 group-data-[collapsible=icon]:hidden"
-                  />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-
-              {/* 🔹 Content */}
-              <DropdownMenuContent
-                align="start"
-                className="w-56 p-2 rounded-xl"
-              >
-                {/* Workspace List */}
-                <DropdownMenuItem className="flex items-center gap-2 px-2 py-2 rounded-md">
-                  <div className="w-6 h-6 rounded bg-muted flex items-center justify-center text-xs">
-                    A
-                  </div>
-                  Acme Inc
-                </DropdownMenuItem>
-
-                <DropdownMenuItem className="flex items-center gap-2 px-2 py-2 rounded-md">
-                  <div className="w-6 h-6 rounded bg-muted flex items-center justify-center text-xs">
-                    V
-                  </div>
-                  Vision Library
-                </DropdownMenuItem>
-
-                {/* Divider */}
-                <div className="my-1 h-px bg-border" />
-
-                {/* Create Workspace */}
-                <DropdownMenuItem className="px-2 py-2 text-sm text-muted-foreground hover:text-foreground">
-                  + Create Workspace
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+    <div className="group-data-[collapsible=icon]:hidden">
+      <h2 className="truncate text-[15px] font-semibold capitalize">
+        {session?.user?.library}
+      </h2>
+    </div>
+  </div>
+</SidebarHeader>
 
       <Separator className="px-1 w-auto" />
       {/* 🔹 CONTENT */}

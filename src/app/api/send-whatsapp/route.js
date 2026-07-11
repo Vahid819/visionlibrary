@@ -2,7 +2,7 @@
 
 import twilio from "twilio";
 import UserModel from "@/models/User";
-import dbConnect from "@/utils/dbConnect";
+import dbConnect from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";

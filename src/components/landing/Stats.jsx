@@ -1,13 +1,13 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useInView } from "framer-motion";
 
 const STATS = [
-  { num: 87, suffix: "+", label: "Active Members" },
-  { num: 25, prefix: "₹", suffix: "K+", label: "Revenue Tracked" },
-  { num: 60, suffix: "", label: "Seats Managed" },
-  { num: 500, suffix: "+", label: "Happy Users" },
+  { num: 87, prefix: "", suffix: "+", label: "Active members" },
+  { num: 25, prefix: "₹", suffix: "K+", label: "Revenue tracked" },
+  { num: 60, prefix: "", suffix: "", label: "Seats managed" },
+  { num: 500, prefix: "", suffix: "+", label: "Happy users" },
 ];
 
 function CountUp({ target, prefix = "", suffix = "", inView }) {
@@ -15,59 +15,41 @@ function CountUp({ target, prefix = "", suffix = "", inView }) {
 
   useEffect(() => {
     if (!inView) return;
-    let start = 0;
-    const duration = 1800;
-    const startTime = Date.now();
-
+    const start = Date.now();
+    const duration = 1600;
     const tick = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(target * ease);
-      setCount(current);
-      if (progress < 1) requestAnimationFrame(tick);
+      const p = Math.min((Date.now() - start) / duration, 1);
+      setCount(Math.round(target * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(tick);
     };
-
     requestAnimationFrame(tick);
   }, [inView, target]);
 
-  return (
-    <span>
-      {prefix}{count}{suffix}
-    </span>
-  );
+  return <>{prefix}{count}{suffix}</>;
 }
 
 export default function Stats() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="py-16 px-6 max-w-7xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/5 border border-white/5 rounded-2xl overflow-hidden bg-white/2"
-      >
+    <section ref={ref} className="py-16 px-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-2 md:grid-cols-4 border border-white/[0.06] rounded-2xl overflow-hidden">
         {STATS.map((s, i) => (
-          <div key={i} className="p-8 md:p-10 text-center">
+          <div
+            key={i}
+            className={`p-8 text-center ${i < 3 ? "border-r border-white/[0.04]" : ""}`}
+          >
             <div
-              className="text-4xl md:text-5xl font-black text-teal-400 mb-2"
+              className="text-4xl font-black text-teal-400 mb-1.5"
               style={{ fontFamily: "Syne, sans-serif" }}
             >
-              <CountUp
-                target={s.num}
-                prefix={s.prefix}
-                suffix={s.suffix}
-                inView={inView}
-              />
+              <CountUp {...s} inView={inView} />
             </div>
-            <div className="text-sm text-white/40 font-light">{s.label}</div>
+            <div className="text-[12px] text-white/30 font-light">{s.label}</div>
           </div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }

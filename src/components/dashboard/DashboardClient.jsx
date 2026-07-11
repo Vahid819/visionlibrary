@@ -8,6 +8,7 @@ import { QuickActions } from "@/components/dashboard/quick-actions";
 import { SeatLayout } from "@/components/dashboard/seat/seat-layout";
 import DashboardSkeleton from "@/components/skeleton/DashboardSkeleton";
 
+
 export default function DashboardClient({ session }) {
   const [seats, setSeats] = useState({});
   const [loading, setLoading] = useState(true);
@@ -106,3 +107,4 @@ export default function DashboardClient({ session }) {
     </div>
   );
 }
+// DashboardClient.whyDidYouRender = true;

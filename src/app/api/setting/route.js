@@ -10,7 +10,6 @@ export async function PATCH(req, res){
     await dbconnect()
     try {
         const body = await req.json();
-        console.log(session)
 
         const updatedata = await UserModel.findOneAndUpdate({email: session.user.email}, body , {
         new: true,

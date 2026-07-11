@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff } from "lucide-react";
 import {
   Field,
   FieldDescription,
@@ -24,13 +24,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EditdataContext } from "@/context/EditContext";
 import { Controller, useForm } from "react-hook-form";
+import axios from "axios";
+import { toast } from "sonner";
 
 function page() {
-    const [edit, setEdit, session] = useContext(EditdataContext);
-  const [show, setShow] = useState(false)
+  const [edit, setEdit, session] = useContext(EditdataContext);
+  const [show, setShow] = useState(false);
 
-    const editinputs = () => (edit === true ? setEdit(false) : setEdit(true));
-
+  const editinputs = () => (edit === true ? setEdit(false) : setEdit(true));
 
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -41,8 +42,15 @@ function page() {
 
   const password = watch("password");
 
-  const onSubmit = (data) => {
-    
+  const onSubmit = async (data) => {
+    try {
+      const res = await axios.patch("/api/setting/security", data);
+      toast.success(res.data.message);
+    } catch (error) {
+      console.log(error.response?.data);
+      toast.error(error.response?.data?.message);
+    }
+    setEdit(!edit)
   };
 
   return (
@@ -105,13 +113,15 @@ function page() {
                   </Field>
                 )}
               />
-              <Button type="button" onClick={()=>setShow(!show)}>
+              <Button type="button" onClick={() => setShow(!show)}>
                 {!show ? <Eye /> : <EyeOff />}
               </Button>
             </FieldGroup>
             <FieldGroup className="flex flex-row mt-3">
               <Button type="submit">Submit</Button>
-              <Button type="button" onClick={editinputs}>Edit</Button>
+              <Button type="button" onClick={editinputs}>
+                Edit
+              </Button>
             </FieldGroup>
           </form>
         </CardContent>

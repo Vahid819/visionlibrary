@@ -1,108 +1,114 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import DashboardMock from "./Dashboardmock";
-
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 32 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] },
-});
+import gsap from "gsap";
+import DashboardMock from "./DashboardMock";
 
 export default function Hero() {
-  return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-28 pb-20 overflow-hidden">
+  const glowRef = useRef(null);
 
-      {/* Grid background */}
+  useEffect(() => {
+    // GSAP floating glow animation
+    gsap.to(glowRef.current, {
+      scale: 1.15,
+      opacity: 0.6,
+      duration: 4,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+  }, []);
+
+  return (
+    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 overflow-hidden">
+
+      {/* Subtle grid */}
       <div
-        className="absolute inset-0 opacity-100"
+        className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(45,212,191,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(45,212,191,0.04) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-          maskImage: "radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent)",
+            "linear-gradient(rgba(45,212,191,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(45,212,191,0.03) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage: "radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent)",
         }}
       />
 
-      {/* Radial glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 h-150 bg-teal-400/8 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-100 h-100 bg-teal-400/5 rounded-full blur-3xl pointer-events-none" />
+      {/* Central glow */}
+      <div
+        ref={glowRef}
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, rgba(45,212,191,0.08) 0%, transparent 70%)" }}
+      />
 
       {/* Badge */}
-      <motion.div {...fadeUp(0.1)} className="relative z-10 mb-7">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-400/20 bg-teal-400/5 text-teal-400 text-xs font-semibold tracking-widest uppercase">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="relative z-10 mb-6"
+      >
+        <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-teal-400/15 bg-teal-400/5 text-teal-400/80 text-[11px] font-semibold tracking-widest uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-          Study Room Management — Reimagined
+          Now in beta — Study Room Management
         </span>
       </motion.div>
 
       {/* Headline */}
       <motion.h1
-        {...fadeUp(0.2)}
-        className="relative z-10 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.95] mb-6 max-w-5xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 text-[clamp(40px,7vw,80px)] font-black tracking-[-3px] leading-[0.95] mb-5 max-w-4xl"
         style={{ fontFamily: "Syne, sans-serif" }}
       >
-        Unlock Your{" "}
-        <span className="text-teal-400 relative">
-          Productivity
-          <span
-            className="absolute -bottom-1 left-0 right-0 h-px bg-linear-to-r from-transparent via-teal-400 to-transparent"
-          />
-        </span>
+        The smarter way to
         <br />
-        <span className="text-white/90">Study Room</span>
+        <span className="text-teal-400">run your library</span>
       </motion.h1>
 
-      {/* Subheading */}
+      {/* Sub */}
       <motion.p
-        {...fadeUp(0.3)}
-        className="relative z-10 text-base sm:text-lg md:text-xl text-white/50 max-w-2xl leading-relaxed mb-10 font-light"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.35 }}
+        className="relative z-10 text-[15px] text-white/40 max-w-lg leading-relaxed mb-8 font-light"
       >
-        The study room management system you've been waiting for.
-        Real-time seats, payments, WhatsApp messaging — all in one sleek admin dashboard.
+        Seat booking, payment tracking, and WhatsApp messaging —
+        all in one clean admin dashboard built for study room owners.
       </motion.p>
 
-      {/* CTA Buttons */}
+      {/* CTAs */}
       <motion.div
-        {...fadeUp(0.4)}
-        className="relative z-10 flex flex-wrap items-center justify-center gap-4 mb-20"
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.45 }}
+        className="relative z-10 flex flex-wrap items-center justify-center gap-3 mb-16"
       >
         <Link
           href="/auth/signup"
-          className="px-8 py-3.5 bg-teal-400 hover:bg-teal-300 text-black font-bold text-sm rounded-xl transition-all duration-200 hover:shadow-2xl hover:shadow-teal-500/30 hover:-translate-y-0.5"
+          className="h-11 px-7 bg-teal-400 hover:bg-teal-300 text-black text-sm font-bold rounded-xl transition-all duration-200 hover:shadow-xl hover:shadow-teal-500/25 hover:-translate-y-px flex items-center"
         >
-          Get Early Access →
+          Start for free →
         </Link>
         <a
           href="#features"
-          className="px-8 py-3.5 border border-white/10 hover:border-teal-400/40 text-white/70 hover:text-teal-400 font-medium text-sm rounded-xl transition-all duration-200 hover:bg-teal-400/5"
+          className="h-11 px-7 text-white/50 hover:text-white text-sm font-medium rounded-xl border border-white/8 hover:border-white/20 transition-all duration-200 flex items-center"
         >
-          See Features
+          See how it works
         </a>
       </motion.div>
 
-      {/* Dashboard preview */}
+      {/* Dashboard */}
       <motion.div
-        initial={{ opacity: 0, y: 60, scale: 0.95 }}
+        initial={{ opacity: 0, y: 48, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 w-full max-w-5xl"
+        transition={{ duration: 1, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 w-full max-w-4xl"
       >
-        {/* Glow under dashboard */}
-        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-3/4 h-20 bg-teal-400/20 blur-3xl rounded-full pointer-events-none" />
+        <div className="absolute -bottom-8 inset-x-16 h-16 bg-teal-400/15 rounded-full blur-3xl pointer-events-none" />
         <DashboardMock />
-      </motion.div>
-
-      {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
-      >
-        <span className="text-xs text-white/20 tracking-widest uppercase">Scroll</span>
-        <div className="w-px h-8 bg-linear-to-b from-white/20 to-transparent" />
       </motion.div>
     </section>
   );

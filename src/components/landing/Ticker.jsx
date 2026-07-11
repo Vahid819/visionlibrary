@@ -1,14 +1,14 @@
 "use client";
 
 const ITEMS = [
-  "🪑 Real-time seat availability",
-  "💳 Payment tracking",
-  "💬 WhatsApp integration",
+  "🪑 Real-time seat map",
+  "💳 UPI & Razorpay",
+  "💬 WhatsApp messaging",
   "📊 Revenue analytics",
   "🔔 Renewal alerts",
-  "⚙️ Admin control panel",
-  "🌙 Dark mode first",
-  "🚀 Instant deployment",
+  "⚙️ Full configuration",
+  "🌙 Dark mode",
+  "🚀 Instant setup",
   "📱 Mobile friendly",
   "🔐 Secure auth",
 ];
@@ -17,28 +17,19 @@ export default function Ticker() {
   const doubled = [...ITEMS, ...ITEMS];
 
   return (
-    <div className="py-5 border-y border-teal-400/10 bg-teal-400/2 overflow-hidden">
+    <div className="py-4 border-y border-white/[0.04] overflow-hidden">
       <div
-        className="flex gap-12 whitespace-nowrap"
-        style={{
-          animation: "ticker 24s linear infinite",
-          width: "max-content",
-        }}
+        className="flex gap-10 whitespace-nowrap"
+        style={{ animation: "ticker 28s linear infinite", width: "max-content" }}
       >
         {doubled.map((item, i) => (
-          <span key={i} className="flex items-center gap-3 text-sm text-white/40 font-medium">
-            <span className="text-teal-400 text-xs">✦</span>
+          <span key={i} className="flex items-center gap-3 text-[13px] text-white/25 font-medium">
+            <span className="text-teal-400/50 text-[10px]">✦</span>
             {item}
           </span>
         ))}
       </div>
-
-      <style>{`
-        @keyframes ticker {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-      `}</style>
+      <style>{`@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }`}</style>
     </div>
   );
 }

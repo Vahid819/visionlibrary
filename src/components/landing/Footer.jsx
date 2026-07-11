@@ -1,33 +1,34 @@
 import Link from "next/link";
 
 const LINKS = {
-  Product: ["Features", "How it Works", "Pricing", "Changelog"],
-  Company: ["About", "Blog", "Contact", "Privacy"],
-  Legal: ["Terms", "Privacy Policy", "Cookie Policy"],
+  Product: ["Features", "Pricing", "Changelog", "Roadmap"],
+  Company: ["About", "Blog", "Contact"],
+  Legal: ["Privacy Policy", "Terms of Service"],
 };
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/5 bg-[#020917] px-6 py-16">
-      <div className="max-w-7xl mx-auto">
+    <footer className="border-t border-white/[0.04] px-6 py-14">
+      <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
+
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div
-              className="text-xl font-black text-teal-400 mb-3"
+              className="text-base font-black text-teal-400 mb-2"
               style={{ fontFamily: "Syne, sans-serif" }}
             >
               Vision Library
             </div>
-            <p className="text-sm text-white/30 leading-relaxed font-light max-w-xs">
-              The study room management system built for modern administrators.
+            <p className="text-[13px] text-white/20 leading-relaxed font-light max-w-[180px] mb-4">
+              Study room management, simplified.
             </p>
-            <div className="flex items-center gap-3 mt-5">
+            <div className="flex gap-2">
               {["𝕏", "in", "gh"].map((icon) => (
                 <a
                   key={icon}
                   href="#"
-                  className="w-8 h-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center text-xs text-white/40 hover:text-teal-400 hover:border-teal-400/30 transition-all"
+                  className="w-7 h-7 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-[11px] text-white/30 hover:text-teal-400 hover:border-teal-400/20 transition-all"
                 >
                   {icon}
                 </a>
@@ -35,18 +36,17 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links */}
-          {Object.entries(LINKS).map(([category, items]) => (
-            <div key={category}>
-              <h4 className="text-xs font-bold text-white/40 tracking-widest uppercase mb-4">
-                {category}
+          {Object.entries(LINKS).map(([cat, items]) => (
+            <div key={cat}>
+              <h4 className="text-[10px] font-bold text-white/25 tracking-widest uppercase mb-3">
+                {cat}
               </h4>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2">
                 {items.map((item) => (
                   <li key={item}>
                     <a
                       href="#"
-                      className="text-sm text-white/30 hover:text-teal-400 transition-colors font-light"
+                      className="text-[13px] text-white/25 hover:text-white/60 transition-colors font-light"
                     >
                       {item}
                     </a>
@@ -57,14 +57,13 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
-        <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/20 font-light">
-            © 2026 Vision Library. Built by Vahid Ansar Momin.
+        <div className="pt-6 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-[11px] text-white/15 font-light">
+            © 2026 Vision Library · Built by Vahid Ansar Momin · Kolhapur
           </p>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-            <span className="text-xs text-white/30">All systems operational</span>
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+            <span className="text-[11px] text-white/20">All systems operational</span>
           </div>
         </div>
       </div>
