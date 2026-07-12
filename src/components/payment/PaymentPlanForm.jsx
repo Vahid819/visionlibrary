@@ -72,16 +72,26 @@ const [saving, setSaving] = useState(false);
   try {
     setSaving(true);
 
+    const payload = {
+      plans: formData.plans.map((plan) => ({
+        planName: plan.name,
+        planAmount: Number(plan.amount),
+        totalPlan: Number(plan.totalPlan || 30), // default if not entered
+      })),
+    };
+
     const { data } = await axios.post(
-      "/api/payment-plan",
-      formData
+      "/api/setting/payment-plan",
+      payload
     );
 
-    if (data.success) {
-      toast.success("Payment plans updated");
+     toast.success(data.message);
 
+      // Disable edit mode
       setEdit(false);
-    }
+
+      // Update form with latest data
+      reset(formData);
   } catch (error) {
     toast.error(
       error.response?.data?.message ||
@@ -89,6 +99,7 @@ const [saving, setSaving] = useState(false);
     );
   } finally {
     setSaving(false);
+    setEdit(false)
   }
 };
 
