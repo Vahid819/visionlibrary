@@ -15,6 +15,8 @@ export default function PaymentPlanPage() {
         {/* Form */}
         <PaymentPlanForm />
 
+        
+
       </div>
     </div>
   );

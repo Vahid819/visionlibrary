@@ -75,6 +75,32 @@ export default function PaymentPlanItem({
         />
       </div>
 
+      {/* Total Plan */}
+      <div className="w-full lg:w-56">
+        <Controller
+          name={`plans.${index}.totalPlan`}
+          control={control}
+          rules={{
+            required: "Total plan is required",
+          }}
+          render={({ field, fieldState }) => (
+            <Field data-error={fieldState.invalid}>
+              <FieldLabel>Total Plan (Days)</FieldLabel>
+
+              <Input
+                {...field}
+                type="number"
+                placeholder="30"
+                disabled={disabled}
+              />
+              {fieldState.error && (
+                <FieldError errors={[fieldState.error]} />
+              )}
+            </Field>
+          )}
+        />
+      </div>
+          
       {/* Actions */}
       <div className="flex items-center gap-2">
         {isLast && (

@@ -146,16 +146,7 @@ export default function AddStudentForm() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#020917] text-[#f0f4f8] p-6 md:p-8"
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(45,212,191,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(45,212,191,0.03) 1px, transparent 1px)",
-        backgroundSize: "44px 44px",
-      }}
-    >
-      {/* Glow */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-teal-400/5 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen bg-transparent text-[#f0f4f8] p-6 md:p-8">
       <div className="relative max-w-[760px] mx-auto">
 
         {/* Page header */}
