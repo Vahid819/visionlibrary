@@ -1,51 +1,106 @@
 "use client";
 
-const PLANS = [
-  { id: "Weekly", emoji: "📅", name: "Weekly", price: "₹149 / week" },
-  { id: "Monthly", emoji: "⚡", name: "Monthly", price: "₹499 / month" },
-  { id: "Yearly", emoji: "🏆", name: "Yearly", price: "₹3,999 / year" },
-];
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function PlanSelector({ selectedPlan, onSelect, error }) {
+export default function PlanSelector({
+  selectedPlan,
+  onSelect,
+  error,
+}) {
+  const [plans, setPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const { data } = await axios.get(
+          "/api/setting/payment-plan"
+        );
+        console.log(data)
+        if (data.success) {
+          setPlans(data.data);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center text-sm text-muted-foreground py-6">
+        Loading plans...
+      </div>
+    );
+  }
+
+  if (plans.length === 0) {
+    return (
+      <div className="text-center text-sm text-muted-foreground py-6">
+        No plans available
+      </div>
+    );
+  }
+
   return (
     <div>
-      <div className="grid grid-cols-3 gap-3">
-        {PLANS.map((plan) => {
-          const isSelected = selectedPlan === plan.id;
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {plans.map((plan) => {
+          const isSelected = selectedPlan === plan.planName;
+
           return (
             <button
-              key={plan.id}
+              key={plan._id}
               type="button"
-              onClick={() => onSelect(plan.id)}
-              className={`
-                border rounded-xl p-4 text-center cursor-pointer transition-all duration-200
-                ${isSelected
+              onClick={() => onSelect(plan.planName)}
+              className={`rounded-xl border p-4 text-center transition-all duration-200 ${
+                isSelected
                   ? "border-teal-400 bg-teal-400/10 shadow-[0_0_16px_rgba(45,212,191,0.1)]"
-                  : "border-white/7 bg-[#0c1525] hover:border-teal-400/30 hover:bg-teal-400/5"
-                }
-              `}
+                  : "border-white/10 bg-[#0c1525] hover:border-teal-400/30 hover:bg-teal-400/5"
+              }`}
             >
-              <div className="text-xl mb-2">{plan.emoji}</div>
-              <div
-                className={`text-xs font-bold mb-1 ${
-                  isSelected ? "text-teal-400" : "text-[#f0f4f8]"
+              <div className="text-2xl mb-2">
+                {plan.planName === "Weekly"
+                  ? "📅"
+                  : plan.planName === "Monthly"
+                  ? "⚡"
+                  : plan.planName === "Yearly"
+                  ? "🏆"
+                  : "📦"}
+              </div>
+
+              <h3
+                className={`font-semibold ${
+                  isSelected
+                    ? "text-teal-400"
+                    : "text-foreground"
                 }`}
-                style={{ fontFamily: "Syne, sans-serif" }}
               >
-                {plan.name}
-              </div>
-              <div className="text-[11px] text-[#6b7fa0] font-light">
-                {plan.price}
-              </div>
+                {plan.planName}
+              </h3>
+
+              <p className="text-sm text-muted-foreground mt-1">
+                ₹{plan.planAmount}
+              </p>
+
+              <p className="text-xs text-muted-foreground">
+                {plan.totalPlan} Days
+              </p>
             </button>
           );
         })}
       </div>
+
       {error && (
-        <p className="text-[11px] text-red-400 mt-1.5">⚠ {error}</p>
+        <p className="mt-2 text-xs text-red-500">
+          ⚠ {error}
+        </p>
       )}
     </div>
   );
 }
-
-export { PLANS };

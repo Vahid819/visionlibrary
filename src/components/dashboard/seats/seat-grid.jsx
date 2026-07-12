@@ -1,53 +1,100 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
+import { toast } from "sonner";
+import { Trash2 } from "lucide-react";
+
 import { SeatItem } from "./seat-item";
+import { Button } from "@/components/ui/button";
 
-export function SeatGrid({ seats }) {
-  const seatList = seats?.seat || [];
+export function SeatGrid({ seats, studentId }) {
+  const router = useRouter();
 
-  const [selectedSeat, setSelectedSeat] = useState(null);
+  const [seatData, setSeatData] = useState(seats);
   const [students, setStudents] = useState([]);
 
+  const seatList = seatData?.seat || [];
+
   useEffect(() => {
-    async function fetchStudents() {
+    const fetchStudents = async () => {
       try {
-        const res = await fetch("/api/students");
+        const { data } = await axios.get("/api/students");
 
-        const result = await res.json();
-
-        if (result.success) {
-          setStudents(result.data);
+        if (data.success) {
+          setStudents(data.data);
         }
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to load students");
       }
-    }
+    };
 
     fetchStudents();
   }, []);
 
-  // Create a map for O(1) lookup
-  const studentMap = useMemo(() => {
-    return students.reduce((acc, student) => {
-      if (student.seat && student.isActive) {
-        acc[student.seat] = student;
-      }
-      return acc;
-    }, {});
-  }, [students]);
+  const selectedStudent = useMemo(() => {
+    if (!studentId) return null;
+
+    return students.find(
+      (student) => String(student._id) === String(studentId)
+    );
+  }, [students, studentId]);
 
   const handleSeatClick = (seat) => {
-    // Only occupied seats are clickable
     if (!seat.isOccupied) return;
 
-    if (selectedSeat?.seatNumber === seat.seatNumber) {
-      setSelectedSeat(null);
+    const student = students.find(
+      (s) => Number(s.seat) === Number(seat.seatNumber)
+    );
+
+    if (!student) {
+      toast.error("Student not found");
       return;
     }
 
-    setSelectedSeat(seat);
+    router.push(`/dashboard/seat/${student._id}`);
+  };
+
+  const handleDeleteStudent = async (studentId, seatNumber) => {
+    if (!confirm("Are you sure you want to delete this student?")) return;
+
+    try {
+      const { data } = await axios.delete(
+        `/api/students/id?id=${studentId}`
+      );
+
+      if (data.success) {
+        toast.success("Student deleted successfully");
+
+        setStudents((prev) =>
+          prev.filter((student) => student._id !== studentId)
+        );
+
+        setSeatData((prev) => ({
+          ...prev,
+          seat: prev.seat.map((seat) =>
+            Number(seat.seatNumber) === Number(seatNumber)
+              ? {
+                  ...seat,
+                  isOccupied: false,
+                }
+              : seat
+          ),
+        }));
+
+        router.push("/dashboard/seat");
+      }
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to delete student"
+      );
+    }
   };
 
   if (!seatList.length) {
@@ -60,13 +107,12 @@ export function SeatGrid({ seats }) {
 
   return (
     <div className="space-y-6">
-
       {/* Seat Grid */}
 
       <motion.div
         className="grid grid-cols-8 gap-2"
-        initial="hidden"
-        animate="visible"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
       >
         {seatList.map((seat) => (
           <SeatItem
@@ -74,93 +120,88 @@ export function SeatGrid({ seats }) {
             seatNumber={seat.seatNumber}
             isOccupied={seat.isOccupied}
             isSelected={
-              selectedSeat?.seatNumber === seat.seatNumber
+              Number(selectedStudent?.seat) ===
+              Number(seat.seatNumber)
             }
             onClick={() => handleSeatClick(seat)}
           />
         ))}
       </motion.div>
 
-      {/* Student Card */}
+      {/* Student Details */}
 
       <AnimatePresence>
-
-        {selectedSeat && (
+        {selectedStudent && (
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 15 }}
             className="rounded-xl border bg-card p-6 shadow"
           >
-            {(() => {
-              const student =
-                studentMap[selectedSeat.seatNumber];
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold">
+                Seat {selectedStudent.seat}
+              </h2>
 
-              return (
-                <>
-                  <div className="flex justify-between mb-5">
+              <span className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-600">
+                Occupied
+              </span>
+            </div>
 
-                    <h2 className="text-xl font-semibold">
-                      Seat {selectedSeat.seatNumber}
-                    </h2>
+            <div className="grid gap-4 md:grid-cols-2 text-sm">
+              <p>
+                <strong>Name:</strong>{" "}
+                {selectedStudent.firstName}{" "}
+                {selectedStudent.lastName}
+              </p>
 
-                    <span className="rounded-full bg-red-100 px-3 py-1 text-red-600 text-sm">
-                      Occupied
-                    </span>
+              <p>
+                <strong>Phone:</strong>{" "}
+                {selectedStudent.phone}
+              </p>
 
-                  </div>
+              <p>
+                <strong>Email:</strong>{" "}
+                {selectedStudent.email}
+              </p>
 
-                  {student ? (
-                    <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <p>
+                <strong>Plan:</strong>{" "}
+                {selectedStudent.plan}
+              </p>
 
-                      <p>
-                        <strong>Name:</strong>{" "}
-                        {student.firstName} {student.lastName}
-                      </p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span className="text-green-600">
+                  Active
+                </span>
+              </p>
 
-                      <p>
-                        <strong>Phone:</strong>{" "}
-                        {student.phone}
-                      </p>
+              <p>
+                <strong>Joined:</strong>{" "}
+                {new Date(
+                  selectedStudent.joinDate
+                ).toLocaleDateString()}
+              </p>
+            </div>
 
-                      <p>
-                        <strong>Email:</strong>{" "}
-                        {student.email}
-                      </p>
-
-                      <p>
-                        <strong>Plan:</strong>{" "}
-                        {student.plan}
-                      </p>
-
-                      <p>
-                        <strong>Status:</strong>{" "}
-                        <span className="text-green-600">
-                          Active
-                        </span>
-                      </p>
-
-                      <p>
-                        <strong>Joined:</strong>{" "}
-                        {new Date(
-                          student.joinDate
-                        ).toLocaleDateString()}
-                      </p>
-
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground">
-                      No student assigned to this seat.
-                    </p>
-                  )}
-                </>
-              );
-            })()}
+            <div className="mt-6 flex justify-end">
+              <Button
+                variant="destructive"
+                onClick={() =>
+                  handleDeleteStudent(
+                    selectedStudent._id,
+                    selectedStudent.seat
+                  )
+                }
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete Student
+              </Button>
+            </div>
           </motion.div>
         )}
-
       </AnimatePresence>
-
     </div>
   );
 }
