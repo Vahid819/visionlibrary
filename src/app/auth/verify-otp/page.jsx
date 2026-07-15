@@ -53,38 +53,41 @@ function VerifyOTPPage() {
 
   // ✅ Submit OTP
   const handleSubmit = async () => {
-    if (!email || otp.length !== 6 || loading) return;
+  if (!email || otp.length !== 6 || loading) return;
 
-    setLoading(true);
-    setError("");
+  setLoading(true);
+  setError("");
 
-    try {
-      const res = await axios.post("/api/auth/otpverification");
+  try {
+    await axios.post("/api/auth/otpverification", {
+      email,
+      otp,
+    });
 
-      if (!res.ok) {
-        setError(res.error || "Invalid OTP ❌");
-      } else {
-        router.push("/dashboard");
-      }
-    } catch (err) {
-      setError("Something went wrong ⚠️");
-    } finally {
-      setLoading(false);
-    }
-  };
+    router.push("/dashboard");
+  } catch (err) {
+    setError(
+      err.response?.data?.error || "Something went wrong ⚠️"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   // 🔁 Resend OTP
   const handleResend = async () => {
-    if (!email || timer > 0) return;
+  if (!email || timer > 0) return;
 
-    try {
-      await axios.post("/api/auth/resend-otp");
+  try {
+    await axios.post("/api/auth/resend-otp", {
+      email,
+    });
 
-      setTimer(60);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    setTimer(60);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-100 via-white to-cyan-100">
@@ -110,7 +113,7 @@ function VerifyOTPPage() {
                 value={otp}
                 onChange={(value) => setOtp(value)}
               >
-                <InputOTPGroup className={"border border-black"}>
+                <InputOTPGroup className={"border border-black text-black"}>
                   {[...Array(6)].map((_, i) => (
                     <InputOTPSlot key={i} index={i} />
                   ))}

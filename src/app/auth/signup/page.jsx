@@ -26,16 +26,12 @@ export default function Page() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post("/api/auth/signup");
+      const res = await axios.post("/api/auth/signup", data);
 
-      if (!res.ok) {
-        toast.error(res.message);
-      } else {
-        toast.success("OTP sent successfully 📧");
-        router.push(`/auth/verify-otp?email=${data.email}`);
-      }
+      toast.success(res.data.message);
+      router.push(`/auth/verify-otp?email=${data.email}`);
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(error.response?.data?.error || "Something went wrong");
     }
   };
 
@@ -93,6 +89,22 @@ export default function Page() {
                     </p>
                   )}
                 </div>
+              </div>
+
+              {/* LibraryName */}
+
+              <div>
+                <Input
+                  type="text"
+                  placeholder="LibraryName"
+                  {...register("libraryname")}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                />
+                {errors.libraryname && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {errors.libraryname.message}
+                  </p>
+                )}
               </div>
 
               {/* Email */}

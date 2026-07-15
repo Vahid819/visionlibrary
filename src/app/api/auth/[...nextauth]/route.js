@@ -18,14 +18,18 @@ export const authOptions = {
 
       async authorize(credentials) {
         console.log("🔥 AUTHORIZE START");
+        console.log("Credentials:", credentials);
 
         try {
           await connectDB();
           console.log("✅ DB Connected");
 
-          const user = await UserModel.findOne({ email: credentials.email });
-          console.log("👤 User found:", user ? "YES" : "NO");
-          console.log("✅ User verified:", user?.userverified);
+          const email = credentials?.email?.trim().toLowerCase();
+          console.log("Searching email:", email);
+
+          const user = await UserModel.findOne({ email });
+
+          console.log("User:", user);
 
           if (!user) return null;
           if (!user.userverified) return null;
@@ -57,7 +61,7 @@ export const authOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
-        token.library = user.library // ✅ FIXED
+        token.library = user.library; // ✅ FIXED
       }
       return token;
     },
@@ -69,7 +73,7 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.email = token.email;
         session.user.name = token.name;
-        session.user.library = token.library // ✅ FIXED
+        session.user.library = token.library; // ✅ FIXED
       }
       return session;
     },
