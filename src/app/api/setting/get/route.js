@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET() {
-
   const session = await getServerSession(authOptions);
   if (!session) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -16,22 +15,21 @@ export async function GET() {
   await connectDB();
 
   try {
-    
-    const seatting = await Seat.findOne({ id: session.user.id });
-
+    const seatting = await Seat.findOne({
+      userId: session.user.id,
+    });
     if (!seatting) {
       return new Response(JSON.stringify({ error: "Seatting not found" }), {
         status: 404,
       });
     }
-    return new Response(
-      JSON.stringify({
+    return NextResponse.json(
+      {
         success: true,
         data: seatting,
-      }),
-      { status: 200 }
+      },
+      { status: 200 },
     );
-
   } catch (error) {
     console.error("Error fetching seatting:", error);
     return new Response(JSON.stringify({ error: "Failed to fetch seatting" }), {

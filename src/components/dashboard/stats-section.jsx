@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
-import { StatCard } from "./stat-card"; // Make sure this path is correct
 import { Users, Armchair, CheckCircle, Wallet } from "lucide-react";
+import { StatCard } from "./stat-card";
 
 export function StatsSection() {
   const [stats, setStats] = useState([
@@ -16,40 +17,42 @@ export function StatsSection() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("/api/setting/get", {
-          cache: "no-store",
-        });
-        const text = await res.text();
-        const result = text ? JSON.parse(text) : {};
-        
+        const { data: result } = await axios.get("/api/setting/get");
+
         const seats = result?.data || {};
         const seatData = seats.seat || {};
 
-        // 🔥 FIX 1: Force row and column to be Numbers so multiplication never fails
         const totalRows = Number(seats.row) || 0;
         const totalCols = Number(seats.column) || 0;
         const total = totalRows * totalCols;
 
-        // 🔥 FIX 2: Check for both boolean (false) and string ("false")
         const occupied = Object.values(seatData).filter(
-          (seat) => seat.isAvailable === false || seat.isAvailable === "false" || seat.isAvailable === 0
+          (seat) =>
+            seat.isAvailable === false ||
+            seat.isAvailable === "false" ||
+            seat.isAvailable === 0
         ).length;
 
-        // 🔥 FIX 3: Prevent 'Available' from ever going into negative numbers
         const available = Math.max(0, total - occupied);
-
-        // 💰 Revenue logic (₹500 per occupied seat)
         const revenue = occupied * 500;
 
-        // ✅ Update state
         setStats([
           { title: "Total Seats", value: total.toString(), icon: Users },
           { title: "Occupied", value: occupied.toString(), icon: Armchair },
           { title: "Available", value: available.toString(), icon: CheckCircle },
-          { title: "Revenue", value: `₹${revenue.toLocaleString('en-IN')}`, icon: Wallet },
+          {
+            title: "Revenue",
+            value: `₹${revenue.toLocaleString("en-IN")}`,
+            icon: Wallet,
+          },
         ]);
       } catch (error) {
         console.error("Error fetching stats:", error);
+
+        if (axios.isAxiosError(error)) {
+          console.log("Status:", error.response?.status);
+          console.log("Data:", error.response?.data);
+        }
       }
     };
 

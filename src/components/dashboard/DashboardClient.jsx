@@ -8,7 +8,6 @@ import { QuickActions } from "@/components/dashboard/quick-actions";
 import { SeatLayout } from "@/components/dashboard/seat/seat-layout";
 import DashboardSkeleton from "@/components/skeleton/DashboardSkeleton";
 
-
 export default function DashboardClient({ session }) {
   const [seats, setSeats] = useState({});
   const [loading, setLoading] = useState(true);
@@ -23,12 +22,13 @@ export default function DashboardClient({ session }) {
         cache: "no-store",
       });
 
-      if (!res.ok) throw new Error("Failed to fetch seats");
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
 
-      const text = await res.text();
-      const result = text ? JSON.parse(text) : {};
-      // console.log("my data", result)
-      setSeats(result?.data || {});
+      const result = await res.json();
+
+      setSeats(result.data || {});
     } catch (err) {
       console.error("Error fetching seats:", err);
       setError("Failed to load seats");
@@ -43,7 +43,7 @@ export default function DashboardClient({ session }) {
 
   // 🔄 Loading UI (modern skeleton feel)
   if (loading) {
-     return <DashboardSkeleton />;
+    return <DashboardSkeleton />;
   }
 
   // ❌ Error UI
@@ -63,7 +63,6 @@ export default function DashboardClient({ session }) {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-background to-muted/40 p-4 md:p-6 space-y-6">
-      
       {/* 🔝 Header */}
       <div className="sticky top-0 right-0 z-10 backdrop-blur bg-background/70 border-b border-border/40 rounded-xl p-3 w-fit md:w-full">
         <DashboardHeader />
@@ -76,10 +75,8 @@ export default function DashboardClient({ session }) {
 
       {/* ⚡ Main Grid */}
       <section className="grid gap-6 lg:grid-cols-3">
-        
         {/* Left Side */}
         <div className="lg:col-span-2 space-y-6">
-          
           {/* Seat Layout */}
           <div className="bg-card/80 backdrop-blur-md border border-border/50 rounded-xl p-4 shadow-sm">
             <h2 className="text-sm font-semibold mb-3 text-muted-foreground">
@@ -99,9 +96,7 @@ export default function DashboardClient({ session }) {
 
         {/* Right Side */}
         <div className="space-y-6">
-          
-            <QuickActions />
-
+          <QuickActions />
         </div>
       </section>
     </div>
