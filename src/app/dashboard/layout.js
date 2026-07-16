@@ -50,7 +50,7 @@ export default async function DashboardLayout({ children }) {
     "
                 >
                   {/* Icon */}
-                  <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center">
                     <LifeBuoy className="h-6 w-6" />
                   </div>
 
