@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -9,12 +9,21 @@ import { Trash2 } from "lucide-react";
 
 import { SeatItem } from "./seat-item";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { ChevronDown } from "lucide-react";
 
 export function SeatGrid({ seats, studentId }) {
   const router = useRouter();
 
   const [seatData, setSeatData] = useState(seats);
   const [students, setStudents] = useState([]);
+  const [editStudent, setEditStudent] = useState(null);
 
   const seatList = seatData?.seat || [];
 
@@ -22,7 +31,7 @@ export function SeatGrid({ seats, studentId }) {
     const fetchStudents = async () => {
       try {
         const { data } = await axios.get("/api/students");
-
+        console.log(data);
         if (data.success) {
           setStudents(data.data);
         }
@@ -31,15 +40,18 @@ export function SeatGrid({ seats, studentId }) {
         toast.error("Failed to load students");
       }
     };
+    if (editStudent) {
+      setEditStudent(editStudent);
+    }
 
     fetchStudents();
-  }, []);
+  }, [editStudent]);
 
   const selectedStudent = useMemo(() => {
     if (!studentId) return null;
 
     return students.find(
-      (student) => String(student._id) === String(studentId)
+      (student) => String(student._id) === String(studentId),
     );
   }, [students, studentId]);
 
@@ -47,7 +59,7 @@ export function SeatGrid({ seats, studentId }) {
     if (!seat.isOccupied) return;
 
     const student = students.find(
-      (s) => Number(s.seat) === Number(seat.seatNumber)
+      (s) => Number(s.seat) === Number(seat.seatNumber),
     );
 
     if (!student) {
@@ -62,15 +74,13 @@ export function SeatGrid({ seats, studentId }) {
     if (!confirm("Are you sure you want to delete this student?")) return;
 
     try {
-      const { data } = await axios.delete(
-        `/api/students/id?id=${studentId}`
-      );
+      const { data } = await axios.delete(`/api/students/id?id=${studentId}`);
 
       if (data.success) {
         toast.success("Student deleted successfully");
 
         setStudents((prev) =>
-          prev.filter((student) => student._id !== studentId)
+          prev.filter((student) => student._id !== studentId),
         );
 
         setSeatData((prev) => ({
@@ -81,7 +91,7 @@ export function SeatGrid({ seats, studentId }) {
                   ...seat,
                   isOccupied: false,
                 }
-              : seat
+              : seat,
           ),
         }));
 
@@ -90,19 +100,12 @@ export function SeatGrid({ seats, studentId }) {
     } catch (error) {
       console.error(error);
 
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to delete student"
-      );
+      toast.error(error.response?.data?.message || "Failed to delete student");
     }
   };
 
   if (!seatList.length) {
-    return (
-      <p className="text-center text-muted-foreground">
-        No seats found
-      </p>
-    );
+    return <p className="text-center text-muted-foreground">No seats found</p>;
   }
 
   return (
@@ -120,8 +123,7 @@ export function SeatGrid({ seats, studentId }) {
             seatNumber={seat.seatNumber}
             isOccupied={seat.isOccupied}
             isSelected={
-              Number(selectedStudent?.seat) ===
-              Number(seat.seatNumber)
+              Number(selectedStudent?.seat) === Number(seat.seatNumber)
             }
             onClick={() => handleSeatClick(seat)}
           />
@@ -150,49 +152,98 @@ export function SeatGrid({ seats, studentId }) {
 
             <div className="grid gap-4 md:grid-cols-2 text-sm">
               <p>
-                <strong>Name:</strong>{" "}
-                {selectedStudent.firstName}{" "}
+                <strong>Name:</strong> {selectedStudent.firstName}{" "}
                 {selectedStudent.lastName}
               </p>
 
               <p>
-                <strong>Phone:</strong>{" "}
-                {selectedStudent.phone}
+                <strong>Phone:</strong> {selectedStudent.phone}
               </p>
 
               <p>
-                <strong>Email:</strong>{" "}
-                {selectedStudent.email}
+                <strong>Email:</strong> {selectedStudent.email}
               </p>
 
               <p>
-                <strong>Plan:</strong>{" "}
-                {selectedStudent.plan}
+                <strong>Plan:</strong> {selectedStudent.plan}
               </p>
 
-              <p>
-                <strong>Status:</strong>{" "}
-                <span className="text-green-600">
-                  Active
-                </span>
-              </p>
+              <div className="flex items-center gap-3">
+                <strong>Payment:</strong>
+
+                {editStudent ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        {editStudent?.paymentStatus || "Pending"}
+                        <ChevronDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent align="start">
+                      <DropdownMenuItem
+                        onClick={() =>
+                          setEditStudent((prev) => ({
+                            ...prev,
+                            paymentStatus: "Pending",
+                          }))
+                        }
+                      >
+                        Pending
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem
+                        onClick={() =>
+                          setEditStudent((prev) => ({
+                            ...prev,
+                            paymentStatus: "Paid",
+                          }))
+                        }
+                      >
+                        Paid
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${
+                      editStudent?.paymentStatus === "Paid"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {editStudent?.paymentStatus || selectedStudent.paymentStatus}
+                  </span>
+                )}
+              </div>
 
               <p>
                 <strong>Joined:</strong>{" "}
-                {new Date(
-                  selectedStudent.joinDate
-                ).toLocaleDateString()}
+                {new Date(selectedStudent.joinDate).toLocaleDateString()}
               </p>
             </div>
 
             <div className="mt-6 flex justify-end">
               <Button
+                variant="outline"
+                onClick={() => setEditStudent(!editStudent)}
+              >
+                Edit
+              </Button>
+              {editStudent && (
+                <Button
+                  onClick={async () => {
+                    console.log(data);
+                    setEditStudent(false);
+                  }}
+                >
+                  Save
+                </Button>
+              )}
+              <Button
                 variant="destructive"
                 onClick={() =>
-                  handleDeleteStudent(
-                    selectedStudent._id,
-                    selectedStudent.seat
-                  )
+                  handleDeleteStudent(selectedStudent._id, selectedStudent.seat)
                 }
               >
                 <Trash2 className="mr-2 h-4 w-4" />

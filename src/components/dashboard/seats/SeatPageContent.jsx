@@ -16,6 +16,7 @@ export default function SeatPageContent({ studentId }) {
         });
 
         const result = await res.json();
+        // console.log("result:",result)
 
         setSeats(result.data || {});
       } catch (error) {
