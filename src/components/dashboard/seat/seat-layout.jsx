@@ -4,7 +4,6 @@ import { SeatGrid } from "./seat-grid";
 import { SeatLegend } from "./seat-legend";
 
 export function SeatLayout({seats}) {
-  // console.log("seats",seats)
   return (
     <div className="space-y-4">
       {/* Header */}

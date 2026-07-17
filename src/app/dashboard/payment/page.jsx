@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 export default function PaymentPage() {
 
   const [userdata, setUserdata] = useState([])
+  const [paymentplan, setPaymentplan] = useState()
   
   const getUserdata = async ()=>{
     try {
@@ -21,9 +22,18 @@ export default function PaymentPage() {
     }
   }
 
+  const getPaymentplan = async ()=>{
+    try {
+      const paymentplans = await axios.get("/api/setting/payment-plan");
+      setPaymentplan(paymentplans.data)
+    } catch (error) {
+       console.error("problem in url",error);
+    }
+  }
+
   useEffect(() => {
     getUserdata();
-  
+    getPaymentplan();
   }, [])
   
 
@@ -35,7 +45,7 @@ export default function PaymentPage() {
       <PaymentFilters />
 
       {/* Stats */}
-      <PaymentStats userdata={userdata}/>
+      <PaymentStats userdata={userdata} paymentplan={paymentplan}/>
 
       {/* Table */}
       <PaymentTable userdata={userdata}/>

@@ -17,7 +17,6 @@ export default function PlanSelector({
         const { data } = await axios.get(
           "/api/setting/payment-plan"
         );
-        console.log(data)
         if (data.success) {
           setPlans(data.data);
         }

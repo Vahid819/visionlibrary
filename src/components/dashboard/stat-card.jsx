@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from "lucide-react";
 
 export function StatCard({ title, value, icon: Icon, trend }) {
-  const isPositive = trend >= 0;
+  // const isPositive = trend >= 0;
 
   return (
     <motion.div
@@ -26,7 +26,7 @@ export function StatCard({ title, value, icon: Icon, trend }) {
             <p className="text-xs text-muted-foreground">{title}</p>
             <p className="text-2xl font-bold">{value}</p>
 
-            {/* 🔥 Dynamic Trend */}
+            {/* 🔥 Dynamic Trend
             <div
               className={`flex items-center gap-1 text-xs mt-1 ${
                 isPositive ? "text-green-500" : "text-red-500"
@@ -38,7 +38,7 @@ export function StatCard({ title, value, icon: Icon, trend }) {
                 <TrendingDown size={12} />
               )}
               {trend}% 
-            </div>
+            </div> */}
           </div>
 
           <div className="p-3 rounded-lg bg-primary/10 text-primary">

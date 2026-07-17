@@ -17,29 +17,19 @@ export const authOptions = {
       },
 
       async authorize(credentials) {
-        console.log("🔥 AUTHORIZE START");
-        console.log("Credentials:", credentials);
-
         try {
           await connectDB();
-          console.log("✅ DB Connected");
 
           const email = credentials?.email?.trim().toLowerCase();
-          console.log("Searching email:", email);
 
           const user = await UserModel.findOne({ email });
-
-          console.log("User:", user);
 
           if (!user) return null;
           if (!user.userverified) return null;
 
           const isMatch = await compare(credentials.password, user.password);
-          console.log("🔐 Password match:", isMatch);
 
           if (!isMatch) return null;
-
-          console.log("✅ LOGIN SUCCESS");
           return {
             id: user._id.toString(),
             email: user.email,
@@ -67,7 +57,6 @@ export const authOptions = {
     },
 
     async session({ session, token }) {
-      // console.log("SESSION TOKEN:", token);
 
       if (session.user) {
         session.user.id = token.id;

@@ -199,32 +199,34 @@ export async function PUT(req) {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
   }
 
   await connectDB();
 
   try {
-    const { paymentStatus, student } = await req.json();
+    const body = await req.json();
 
     const updatedStudent = await StudentModel.findOneAndUpdate(
-      student,
       {
-        paymentStatus,
+        _id: body.studentId,
+        createdBy: session.user.id,
       },
       {
-        new: true,
+        paymentStatus: body.paymentStatus,
       },
+      {
+        returnDocument: "after",
+      }
     );
 
     if (!updatedStudent) {
       return NextResponse.json(
-        {
-          message: "Student not found",
-        },
-        {
-          status: 404,
-        },
+        { message: "Student not found" },
+        { status: 404 }
       );
     }
 
@@ -236,11 +238,9 @@ export async function PUT(req) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message || "Failed to update student payment status",
+        message: error.message || "Failed to update payment status",
       },
-      {
-        status: 500,
-      },
+      { status: 500 }
     );
   }
 }

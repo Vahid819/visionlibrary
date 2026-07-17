@@ -9,11 +9,9 @@ export async function POST(req) {
 
   try {
     const body = await req.json();
-    console.log(body)
     const existingUser = await UserModel.findOne({
       email: body.email,
     });
-    console.log("existingUser",existingUser)
     if (existingUser) {
       return Response.json(
         {
@@ -30,7 +28,6 @@ export async function POST(req) {
     const hashedPassword = await hash(body.password, 10);
 
     const emailResponse = await sendOTPEmail(body.email, otp);
-    console.log(emailResponse)
     if (!emailResponse.success) {
       return Response.json(
         {
@@ -55,7 +52,6 @@ export async function POST(req) {
       // User should NOT be verified yet
       userverified: false,
     });
-    console.log("user",user)
     return Response.json(
       {
         success: true,

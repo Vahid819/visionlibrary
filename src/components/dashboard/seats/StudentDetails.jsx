@@ -39,14 +39,14 @@ useEffect(() => {
 
   const handleSave = async () => {
     try {
+      console.log(student._id)
       const { data } = await axios.put(
         `/api/students`,
         {
           paymentStatus,
           studentId: student._id
         }
-      );
-
+      )
       if (data.success) {
         toast.success("Payment updated");
 

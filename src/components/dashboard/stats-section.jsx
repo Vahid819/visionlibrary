@@ -18,19 +18,15 @@ export function StatsSection() {
     const fetchStats = async () => {
       try {
         const { data: result } = await axios.get("/api/setting/get");
-
         const seats = result?.data || {};
         const seatData = seats.seat || {};
 
         const totalRows = Number(seats.row) || 0;
         const totalCols = Number(seats.column) || 0;
-        const total = totalRows * totalCols;
+        const total = result?.data.seat.length;
 
         const occupied = Object.values(seatData).filter(
-          (seat) =>
-            seat.isAvailable === false ||
-            seat.isAvailable === "false" ||
-            seat.isAvailable === 0
+          (seat) => seat.isOccupied
         ).length;
 
         const available = Math.max(0, total - occupied);

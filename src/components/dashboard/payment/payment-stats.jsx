@@ -5,24 +5,26 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Wallet, CreditCard, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-export function PaymentStats({ userdata, loading = false }) {
+export function PaymentStats({ userdata, paymentplan, loading = false }) {
   // Calculate stats
-  const users = userdata?.data || [];
-  console.log(users, "users");
+  const users = Array.isArray(userdata?.data) ? userdata.data : [];
+  const plans = Array.isArray(paymentplan?.data) ? paymentplan.data : [];
 
-  const totalRevenue = users.reduce(
-    (sum, user) => sum + (Number(user.amountPaid) || 0),
-    0
-  );
+  const planPriceMap = plans.reduce((acc, plan) => {
+    acc[plan.planName] = Number(plan.planAmount);
+    return acc;
+  }, {});
+  const totalRevenue = users.reduce((sum, user) => {
+    if (user.paymentStatus !== "Paid") return sum;
 
+    return sum + (planPriceMap[user.plan] || 0);
+  }, 0);
   const successful = users.filter(
-  (user) => user.paymentStatus === "Paid"
-).length;
-
-const pending = users.filter(
-  (user) => user.paymentStatus === "Pending"
-).length;
-
+    (user) => user.paymentStatus === "Paid",
+  ).length;
+  const pending = users.filter(
+    (user) => user.paymentStatus === "Pending",
+  ).length;
   const stats = [
     {
       title: "Total Revenue",
@@ -71,13 +73,9 @@ const pending = users.filter(
           <Card className="transition-all hover:shadow-lg">
             <CardContent className="flex items-center justify-between p-5">
               <div>
-                <p className="text-sm text-muted-foreground">
-                  {item.title}
-                </p>
+                <p className="text-sm text-muted-foreground">{item.title}</p>
 
-                <h2 className="mt-1 text-2xl font-bold">
-                  {item.value}
-                </h2>
+                <h2 className="mt-1 text-2xl font-bold">{item.value}</h2>
               </div>
 
               <div className="rounded-lg bg-primary/10 p-3 text-primary">
