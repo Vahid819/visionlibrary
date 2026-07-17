@@ -194,3 +194,53 @@ export async function DELETE(req) {
     );
   }
 }
+
+export async function PUT(req) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  await connectDB();
+
+  try {
+    const { paymentStatus, student } = await req.json();
+
+    const updatedStudent = await StudentModel.findOneAndUpdate(
+      student,
+      {
+        paymentStatus,
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (!updatedStudent) {
+      return NextResponse.json(
+        {
+          message: "Student not found",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: updatedStudent,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: error.message || "Failed to update student payment status",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+}

@@ -1,30 +1,31 @@
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { resend } from "./resend";
+import OtpEmailTemplate from "@/components/emails/OtpEmailTemplate";
 
 export async function sendOTPEmail(email, otp) {
   try {
-    await resend.emails.send({
-      from: "VisionArc <onboarding@resend.dev>",
+    const { data, error } = await resend.emails.send({
+      from: "Vision Library <onboarding@resend.dev>", // Replace with your verified domain later
       to: email,
-      subject: "Verify your Email",
-      html: `
-        <h2>Welcome to VisionArc</h2>
-
-        <p>Your OTP is:</p>
-
-        <h1>${otp}</h1>
-
-        <p>This OTP is valid for 10 minutes.</p>
-      `,
+      subject: "Verify Your Email",
+      react: (
+        <OtpEmailTemplate
+          otp={otp}
+        />
+      ),
     });
+
+    if (error) {
+      return {
+        success: false,
+        error,
+      };
+    }
 
     return {
       success: true,
+      data,
     };
   } catch (error) {
-    console.error(error);
-
     return {
       success: false,
       error,

@@ -4,21 +4,18 @@ import { useEffect, useState } from "react";
 import { SeatHeader } from "@/components/dashboard/seats/seat-header";
 import { SeatLayout } from "@/components/dashboard/seats/seat-layout";
 import SeatsSkeleton from "@/components/skeleton/SeatsSkeleton";
+import axios from "axios";
 
 export default function SeatPageContent({ studentId }) {
   const [seats, setSeats] = useState({});
+  
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const res = await fetch("/api/setting/setas", {
-          cache: "no-store",
-        });
+        const res = await axios.get("/api/setting/setas");
 
-        const result = await res.json();
-        // console.log("result:",result)
-
-        setSeats(result.data || {});
+        setSeats(res.data || {});
       } catch (error) {
         console.error(error);
       } finally {
